@@ -1,0 +1,22 @@
+@import "reset";
+@import "grid";
+@import "media";
+@import "variables";
+
+html,
+body {
+  font-family: "IBM Plex Mono", monospace;
+  background-color: #e9ebee;
+}
+* {
+  color: #1d2129;
+}
+
+.container {
+  max-width: 1100px;
+  margin: auto;
+}
+
+main {
+  margin: 20px 0px;
+}
