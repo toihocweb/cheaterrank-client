@@ -7,8 +7,12 @@ html,
 body {
   font-family: "IBM Plex Mono", monospace;
   background-color: #e9ebee;
+  color: #1d2129;
 }
-* {
+
+a,
+button {
+  font-family: "IBM Plex Mono";
   color: #1d2129;
 }
 

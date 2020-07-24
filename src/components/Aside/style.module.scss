@@ -1,0 +1,23 @@
+.Aside {
+  background: white;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 200px;
+  z-index: 999;
+  ul {
+    li {
+      padding: 10px 0px;
+      text-align: center;
+      a {
+        display: block;
+        font-weight: bold;
+      }
+    }
+  }
+}
+
+.active {
+  background: rgb(0, 255, 0);
+}
