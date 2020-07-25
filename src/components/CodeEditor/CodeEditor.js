@@ -10,11 +10,14 @@ import classes from "./style.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faTimes } from "@fortawesome/free-solid-svg-icons";
 
+const initialCode = `function solution(input){
+  // your code here
+}`;
+
 const CodeEditor = ({ currentTest }) => {
-  const [code, setCode] = useState(`function solution(input){
-    // your code here
-}`);
+  const [code, setCode] = useState(initialCode);
   const [result, setResult] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [err, setErr] = useState("");
   const refs = useRef([]);
   const addToRefs = (el) => {
@@ -45,6 +48,14 @@ const CodeEditor = ({ currentTest }) => {
     );
   };
 
+  const renderResult = (index) => {
+    if (result) {
+      return result.failed_cases.includes(index + 1)
+        ? renderIcon(false)
+        : renderIcon(true);
+    }
+  };
+
   const handleActive = (idx) => {
     if (refs.current[idx].style.display !== "none") {
       refs.current[idx].style.display = "none";
@@ -57,6 +68,8 @@ const CodeEditor = ({ currentTest }) => {
 
   const handleSubmit = async () => {
     setErr("");
+    setLoading(true);
+    setResult(null);
     const regex = /\{((.|\n)*)(.*?)\}/gm;
     const refactor_code = regex.exec(code);
     if (refactor_code !== null) {
@@ -67,11 +80,19 @@ const CodeEditor = ({ currentTest }) => {
       const res = await axios.post("http://localhost:5000/test", userCode);
       try {
         setResult(eval("(" + res.data + ")"));
+        console.log(eval("(" + res.data + ")"));
+        setLoading(false);
       } catch (err) {
         setErr(res.data);
+        setLoading(false);
       }
+    } else {
+      setLoading(false);
+      setResult(null);
+      setCode(initialCode);
     }
   };
+
   return (
     <div
       style={{
@@ -82,8 +103,8 @@ const CodeEditor = ({ currentTest }) => {
       }}
     >
       <div className={classes.question}>
-        <h3>Test 1</h3>
-        <p>Find the biggest number</p>
+        <h3>Yêu Cầu</h3>
+        <p>{currentTest.desc}</p>
       </div>
       <div style={{ display: "flex" }} className="wrapper">
         <div className="editor">
@@ -100,7 +121,9 @@ const CodeEditor = ({ currentTest }) => {
             width="650px"
           />
           <div className={classes.btnActions}>
-            <button onClick={handleSubmit}>Run Test</button>
+            <button onClick={handleSubmit}>
+              {loading ? "Đang kiểm  tra" : "Kiểm tra"}
+            </button>
           </div>
         </div>
         <div style={{ marginLeft: 20 }} className={classes.cases}>
@@ -112,14 +135,31 @@ const CodeEditor = ({ currentTest }) => {
                   className={classes.caseTitle}
                 >
                   Test Case {index + 1}
-                  {result && result.failed_cases.includes(index + 1)
-                    ? renderIcon(false)
-                    : renderIcon(true)}
+                  {renderResult(index)}
                 </div>
-                <div ref={addToRefs}>
+                <div ref={addToRefs} style={{ display: "none" }}>
                   <div className={classes.caseDetail}>
-                    <p>Inputs</p>
+                    <p>Input</p>
                     <span>{JSON.stringify(val)}</span>
+                    <p style={{ marginTop: 20 }}>Output</p>
+                    <span>{JSON.parse(currentTest.outputs)[index]}</span>
+
+                    {result && (
+                      <>
+                        <p style={{ marginTop: 20 }}>Your Result</p>
+                        <span
+                          style={{
+                            color: result.failed_cases.includes(index + 1)
+                              ? "#e74c3c"
+                              : "rgb(0, 255, 0)",
+                          }}
+                        >
+                          {typeof result.code_result[index] !== "undefined"
+                            ? result.code_result[index].toString()
+                            : "undefined"}
+                        </span>
+                      </>
+                    )}
                   </div>
                 </div>
               </li>

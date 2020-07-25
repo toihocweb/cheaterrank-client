@@ -6,9 +6,10 @@ const Lang = ({ match }) => {
   const [currentTest, setCurrentTest] = useState({
     id: 1,
     lang: "javascript",
-    desc: "description",
-    inputs: '[["hello", "aaaaaa"] , ["nhat" , ""]]',
-    outputs: '["aaaaaa" , "nhat"]',
+    desc: "Tính tổng số lượng các sản phẩm",
+    inputs:
+      '[[{"name": "Dress" , "quantity": 10} , {"name": "Hat" , "quantity": 20}], [{"name": "Shirt"} , {"name": "Coat" , "quantity": 20}]]',
+    outputs: "[30 , 20]",
   });
 
   return (

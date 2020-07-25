@@ -7,10 +7,7 @@ const Aside = () => {
       <nav>
         <ul>
           <li className={classes.active}>
-            <a href="">Test 1</a>
-          </li>
-          <li>
-            <a href="">Test 2</a>
+            <a href="">Câu 1</a>
           </li>
         </ul>
       </nav>
