@@ -7,8 +7,8 @@ const Lang = ({ match }) => {
     id: 1,
     lang: "javascript",
     desc: "description",
-    inputs: "[[1, 2, 3],[2, 56, 34, 54]]",
-    outputs: "[3,56]",
+    inputs: '[["hello", "aaaaaa"] , ["nhat" , ""]]',
+    outputs: '["aaaaaa" , "nhat"]',
   });
 
   return (

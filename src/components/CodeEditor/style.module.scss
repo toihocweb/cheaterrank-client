@@ -30,15 +30,37 @@
       background: white;
       display: block;
       margin-bottom: 20px;
-      // padding: 20px;
       border-radius: 3px;
       color: rgb(0, 255, 0);
       font-weight: bold;
-      cursor: pointer;
     }
   }
 }
 .caseTitle {
   padding: 15px;
   box-shadow: 5px 7px 23px 0px rgba(58, 52, 82, 0.13);
+  cursor: pointer;
+}
+
+.err {
+  padding: 20px;
+  border-radius: 3px;
+  border: 2px solid #e74c3c;
+  font-weight: bold;
+  background: white;
+  margin-top: 20px;
+  color: #e74c3c;
+}
+
+.caseDetail {
+  padding: 10px;
+  color: #333;
+  span {
+    background: rgba(58, 52, 82, 0.15);
+    border-radius: 2px;
+    margin-top: 6px;
+    padding: 8px;
+    display: block;
+    box-shadow: inset 5px 7px 23px 0px rgba(58, 52, 82, 0.2);
+  }
 }

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import AceEditor from "react-ace";
 import axios from "axios";
 import "ace-builds/src-noconflict/mode-javascript";
@@ -15,25 +15,72 @@ const CodeEditor = ({ currentTest }) => {
     // your code here
 }`);
   const [result, setResult] = useState(null);
+  const [err, setErr] = useState("");
+  const refs = useRef([]);
+  const addToRefs = (el) => {
+    if (el && !refs.current.includes(el)) {
+      refs.current.push(el);
+    }
+  };
+
   const onChange = (newValue) => {
     setCode(newValue);
   };
+
+  const renderIcon = (passed) => {
+    return passed ? (
+      <FontAwesomeIcon
+        style={{ marginLeft: 10 }}
+        color="rgb(0, 255, 0)"
+        size="lg"
+        icon={faCheck}
+      />
+    ) : (
+      <FontAwesomeIcon
+        style={{ marginLeft: 10 }}
+        color="#e74c3c"
+        size="lg"
+        icon={faTimes}
+      />
+    );
+  };
+
+  const handleActive = (idx) => {
+    if (refs.current[idx].style.display !== "none") {
+      refs.current[idx].style.display = "none";
+    } else {
+      refs.current[idx].style.display = "block";
+    }
+  };
+
+  const renderErr = (msg) => <div className={classes.err}>{msg}</div>;
+
   const handleSubmit = async () => {
+    setErr("");
     const regex = /\{((.|\n)*)(.*?)\}/gm;
-    console.log(JSON.parse(currentTest.inputs));
     const refactor_code = regex.exec(code);
     if (refactor_code !== null) {
       const userCode = {
         ...currentTest,
         code: refactor_code[1],
       };
-      console.log(userCode.inputs);
       const res = await axios.post("http://localhost:5000/test", userCode);
-      setResult(eval("(" + res.data + ")"));
+      try {
+        setResult(eval("(" + res.data + ")"));
+      } catch (err) {
+        setErr(res.data);
+      }
     }
   };
   return (
-    <div style={{ marginLeft: 220, paddingRight: 40, marginTop: 40 }}>
+    <div
+      style={{
+        marginLeft: 220,
+        paddingRight: 40,
+        marginTop: 40,
+        paddingBottom: 100,
+      }}
+    >
       <div className={classes.question}>
         <h3>Test 1</h3>
         <p>Find the biggest number</p>
@@ -59,34 +106,28 @@ const CodeEditor = ({ currentTest }) => {
         <div style={{ marginLeft: 20 }} className={classes.cases}>
           <ul>
             {JSON.parse(currentTest.inputs).map((val, index) => (
-              <li>
-                <div className={classes.caseTitle}>
+              <li key={index}>
+                <div
+                  onClick={() => handleActive(index)}
+                  className={classes.caseTitle}
+                >
                   Test Case {index + 1}
-                  <FontAwesomeIcon
-                    style={{ marginLeft: 10 }}
-                    color="#e74c3c"
-                    size="lg"
-                    icon={faTimes}
-                  />
+                  {result && result.failed_cases.includes(index + 1)
+                    ? renderIcon(false)
+                    : renderIcon(true)}
                 </div>
-                <div style={{ display: "none" }}>
-                  <div className="case-detail">
+                <div ref={addToRefs}>
+                  <div className={classes.caseDetail}>
                     <p>Inputs</p>
-                    <p>{JSON.stringify(val)}</p>
+                    <span>{JSON.stringify(val)}</span>
                   </div>
                 </div>
-                {/* {JSON.stringify(val)}{" "}
-                <FontAwesomeIcon
-                  color="rgb(0, 255, 0)"
-                  size="lg"
-                  icon={faCheck}
-                /> */}
-                {/* <FontAwesomeIcon color="#e74c3c" size="lg" icon={faTimes} /> */}
               </li>
             ))}
           </ul>
         </div>
       </div>
+      {err && renderErr(err)}
     </div>
   );
 };
