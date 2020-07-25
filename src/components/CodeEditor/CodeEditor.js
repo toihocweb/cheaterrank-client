@@ -14,7 +14,7 @@ const CodeEditor = ({ currentTest }) => {
   const [code, setCode] = useState(`function solution(input){
     // your code here
 }`);
-
+  const [result, setResult] = useState(null);
   const onChange = (newValue) => {
     setCode(newValue);
   };
@@ -29,7 +29,7 @@ const CodeEditor = ({ currentTest }) => {
       };
       console.log(userCode.inputs);
       const res = await axios.post("http://localhost:5000/test", userCode);
-      console.log(res);
+      setResult(eval("(" + res.data + ")"));
     }
   };
   return (
