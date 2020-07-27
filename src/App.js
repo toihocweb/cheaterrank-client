@@ -9,7 +9,7 @@ const App = () => {
       <Switch>
         <Route component={Home} path="/" exact />
         <Route component={Lang} path="/:lang" exact />
-        <Route render={(props) => <h1>Not Found</h1>} path="*" exact />
+        <Route render={(props) => <h1>Page Not Found</h1>} path="*" exact />
       </Switch>
     </Router>
   );

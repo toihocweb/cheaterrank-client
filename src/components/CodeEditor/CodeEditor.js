@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/mode-javascript";
 import "ace-builds/src-noconflict/theme-monokai";
@@ -17,14 +17,20 @@ const initialCode = `function solution(input){
 
 const CodeEditor = () => {
   const [code, setCode] = useState(initialCode);
-
+  const [currentTest, setCurrentTest] = useState(null);
   const dispatch = useDispatch();
-  const currentTest = useSelector((state) => state.testReducer.currentTest);
+  const currentTesta = useSelector((state) => state.testReducer.currentTest);
   const loading = useSelector((state) => state.resultReducer.isLoading);
   const result = useSelector((state) => state.resultReducer.results);
   const error = useSelector((state) => state.errorReducer.error);
   const refs = useRef([]);
   refs.current = [];
+
+  useEffect(() => {
+    setCurrentTest(currentTesta);
+    setCode(initialCode);
+    return () => {};
+  }, [currentTesta]);
 
   const addToRefs = (el) => {
     if (el && !refs.current.includes(el)) {
@@ -64,7 +70,7 @@ const CodeEditor = () => {
             style={{
               marginLeft: 10,
             }}
-            color="#333"
+            color="white"
             size="lg"
             icon={faSpinner}
           />
@@ -108,13 +114,16 @@ const CodeEditor = () => {
       style={{
         marginLeft: 220,
         paddingRight: 40,
-        marginTop: 40,
+        paddingTop: 40,
         paddingBottom: 100,
       }}
     >
       {currentTest && (
         <>
-          <div className={classes.question}>
+          <div
+            className={classes.question}
+            style={{ background: "#333", color: "white" }}
+          >
             <h3>Yêu Cầu</h3>
             <p>{currentTest.desc}</p>
           </div>
@@ -170,7 +179,7 @@ const CodeEditor = () => {
                               style={{
                                 color: result.failed_cases.includes(index + 1)
                                   ? "#e74c3c"
-                                  : "rgb(0, 255, 0)",
+                                  : "#e67e22",
                               }}
                             >
                               {typeof result.code_result[index] !== "undefined"

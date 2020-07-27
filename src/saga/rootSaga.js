@@ -29,15 +29,25 @@ function* getTest(action) {
 }
 
 function* getResult(action) {
+  yield put({ type: GET_ERROR, error: "" });
   try {
-    const data = yield getResults(action.userCode);
-    yield put({ type: GET_RESULT, data });
+    let data = yield getResults(action.userCode);
+    console.log("data ", data);
+    if (typeof data === "object") {
+      yield put({ type: GET_RESULT, data });
+    } else {
+      if (data === undefined) {
+        yield put({ type: GET_ERROR, error: "Dùng return để trả về kết quả" });
+        yield put({ type: GET_RESULT, results: null });
+      }
+      yield put({ type: GET_ERROR, error: data });
+      yield put({ type: GET_RESULT, results: null });
+    }
     yield delay(1000);
     yield put({ type: GET_LOADING, isLoading: false });
   } catch (error) {
     yield delay(1000);
     yield put({ type: GET_LOADING, isLoading: false });
-    yield put({ type: GET_ERROR, error });
   }
 }
 
