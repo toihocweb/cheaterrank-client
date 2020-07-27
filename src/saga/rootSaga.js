@@ -34,6 +34,8 @@ function* getResult(action) {
     let data = yield getResults(action.userCode);
     if (typeof data === "object") {
       yield put({ type: GET_RESULT, data });
+      yield delay(1000);
+      yield put({ type: GET_LOADING, isLoading: false });
     } else {
       if (data === undefined) {
         yield put({ type: GET_ERROR, error: "Dùng return để trả về kết quả" });
@@ -41,9 +43,8 @@ function* getResult(action) {
       }
       yield put({ type: GET_ERROR, error: data });
       yield put({ type: GET_RESULT, results: null });
+      yield put({ type: GET_LOADING, isLoading: false });
     }
-    yield delay(1000);
-    yield put({ type: GET_LOADING, isLoading: false });
   } catch (error) {
     yield delay(1000);
     yield put({ type: GET_LOADING, isLoading: false });
