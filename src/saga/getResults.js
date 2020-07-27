@@ -4,7 +4,7 @@ export const getResults = async (userCode) => {
   try {
     /*eslint-disable no-eval */
 
-    let res = await Axios.post("http://202.182.100.160:5000/test", userCode);
+    let res = await Axios.post("http://localhost:5000/test/", userCode);
 
     if (res.data.includes("Error")) {
       return res.data;
