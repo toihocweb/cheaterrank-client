@@ -10,10 +10,8 @@
     li {
       padding: 10px 0px;
       text-align: center;
-      a {
-        display: block;
-        font-weight: bold;
-      }
+      font-weight: bold;
+      cursor: pointer;
     }
   }
 }

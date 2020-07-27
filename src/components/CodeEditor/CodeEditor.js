@@ -1,6 +1,5 @@
 import React, { useState, useRef } from "react";
 import AceEditor from "react-ace";
-import axios from "axios";
 import "ace-builds/src-noconflict/mode-javascript";
 import "ace-builds/src-noconflict/theme-monokai";
 import "ace-builds/src-noconflict/snippets/javascript";
@@ -8,20 +7,28 @@ import "ace-builds/src-noconflict/ace";
 
 import classes from "./style.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheck, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { faCheck, faTimes, faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { useSelector, useDispatch } from "react-redux";
+import { gettingResult, gettingLoading } from "../actions";
 
 const initialCode = `function solution(input){
   // your code here
 }`;
 
-const CodeEditor = ({ currentTest }) => {
+const CodeEditor = () => {
   const [code, setCode] = useState(initialCode);
-  const [result, setResult] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [err, setErr] = useState("");
+
+  const dispatch = useDispatch();
+  const currentTest = useSelector((state) => state.testReducer.currentTest);
+  const loading = useSelector((state) => state.resultReducer.isLoading);
+  const result = useSelector((state) => state.resultReducer.results);
+  const error = useSelector((state) => state.errorReducer.error);
   const refs = useRef([]);
+  refs.current = [];
+
   const addToRefs = (el) => {
     if (el && !refs.current.includes(el)) {
+      el.style.display = "none";
       refs.current.push(el);
     }
   };
@@ -50,9 +57,23 @@ const CodeEditor = ({ currentTest }) => {
 
   const renderResult = (index) => {
     if (result) {
-      return result.failed_cases.includes(index + 1)
-        ? renderIcon(false)
-        : renderIcon(true);
+      if (loading) {
+        return (
+          <FontAwesomeIcon
+            className={classes.rotate}
+            style={{
+              marginLeft: 10,
+            }}
+            color="#333"
+            size="lg"
+            icon={faSpinner}
+          />
+        );
+      } else {
+        return result.failed_cases.includes(index + 1)
+          ? renderIcon(false)
+          : renderIcon(true);
+      }
     }
   };
 
@@ -67,9 +88,7 @@ const CodeEditor = ({ currentTest }) => {
   const renderErr = (msg) => <div className={classes.err}>{msg}</div>;
 
   const handleSubmit = async () => {
-    setErr("");
-    setLoading(true);
-    setResult(null);
+    dispatch(gettingLoading(true));
     const regex = /\{((.|\n)*)(.*?)\}/gm;
     const refactor_code = regex.exec(code);
     if (refactor_code !== null) {
@@ -77,18 +96,9 @@ const CodeEditor = ({ currentTest }) => {
         ...currentTest,
         code: refactor_code[1],
       };
-      const res = await axios.post("http://localhost:5000/test", userCode);
-      try {
-        setResult(eval("(" + res.data + ")"));
-        console.log(eval("(" + res.data + ")"));
-        setLoading(false);
-      } catch (err) {
-        setErr(res.data);
-        setLoading(false);
-      }
+      dispatch(gettingResult(userCode));
     } else {
-      setLoading(false);
-      setResult(null);
+      dispatch(gettingLoading(false));
       setCode(initialCode);
     }
   };
@@ -102,72 +112,83 @@ const CodeEditor = ({ currentTest }) => {
         paddingBottom: 100,
       }}
     >
-      <div className={classes.question}>
-        <h3>Yêu Cầu</h3>
-        <p>{currentTest.desc}</p>
-      </div>
-      <div style={{ display: "flex" }} className="wrapper">
-        <div className="editor">
-          <AceEditor
-            name="editor"
-            mode="javascript"
-            theme="monokai"
-            onChange={onChange}
-            fontSize={14}
-            showPrintMargin={true}
-            showGutter={true}
-            highlightActiveLine={true}
-            value={code}
-            width="650px"
-          />
-          <div className={classes.btnActions}>
-            <button onClick={handleSubmit}>
-              {loading ? "Đang kiểm  tra" : "Kiểm tra"}
-            </button>
+      {currentTest && (
+        <>
+          <div className={classes.question}>
+            <h3>Yêu Cầu</h3>
+            <p>{currentTest.desc}</p>
           </div>
-        </div>
-        <div style={{ marginLeft: 20 }} className={classes.cases}>
-          <ul>
-            {JSON.parse(currentTest.inputs).map((val, index) => (
-              <li key={index}>
-                <div
-                  onClick={() => handleActive(index)}
-                  className={classes.caseTitle}
+          <div style={{ display: "flex" }} className="wrapper">
+            <div className="editor">
+              <AceEditor
+                name="editor"
+                mode="javascript"
+                theme="monokai"
+                onChange={onChange}
+                fontSize={14}
+                showPrintMargin={true}
+                showGutter={true}
+                highlightActiveLine={true}
+                value={code}
+                width="650px"
+              />
+              <div className={classes.btnActions}>
+                <button
+                  onClick={handleSubmit}
+                  style={{ pointerEvents: loading ? "none" : "" }}
                 >
-                  Test Case {index + 1}
-                  {renderResult(index)}
-                </div>
-                <div ref={addToRefs} style={{ display: "none" }}>
-                  <div className={classes.caseDetail}>
-                    <p>Input</p>
-                    <span>{JSON.stringify(val)}</span>
-                    <p style={{ marginTop: 20 }}>Output</p>
-                    <span>{JSON.parse(currentTest.outputs)[index]}</span>
-
-                    {result && (
-                      <>
-                        <p style={{ marginTop: 20 }}>Your Result</p>
-                        <span
-                          style={{
-                            color: result.failed_cases.includes(index + 1)
-                              ? "#e74c3c"
-                              : "rgb(0, 255, 0)",
-                          }}
-                        >
-                          {typeof result.code_result[index] !== "undefined"
-                            ? result.code_result[index].toString()
-                            : "undefined"}
+                  {loading ? "Đang kiểm  tra" : "Kiểm tra"}
+                </button>
+              </div>
+            </div>
+            <div style={{ marginLeft: 20 }} className={classes.cases}>
+              <ul>
+                {JSON.parse(currentTest.inputs).map((val, index) => (
+                  <li key={index}>
+                    <div
+                      onClick={() => handleActive(index)}
+                      className={classes.caseTitle}
+                    >
+                      Test Case {index + 1}
+                      {renderResult(index)}
+                    </div>
+                    <div ref={addToRefs} style={{ display: "none" }}>
+                      <div className={classes.caseDetail}>
+                        <p>Input</p>
+                        <span>{JSON.stringify(val)}</span>
+                        <p style={{ marginTop: 20 }}>Output</p>
+                        <span>
+                          {JSON.stringify(
+                            JSON.parse(currentTest.outputs)[index]
+                          )}
                         </span>
-                      </>
-                    )}
-                  </div>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-      {err && renderErr(err)}
+
+                        {result && (
+                          <>
+                            <p style={{ marginTop: 20 }}>Your Result</p>
+                            <span
+                              style={{
+                                color: result.failed_cases.includes(index + 1)
+                                  ? "#e74c3c"
+                                  : "rgb(0, 255, 0)",
+                              }}
+                            >
+                              {typeof result.code_result[index] !== "undefined"
+                                ? JSON.stringify(result.code_result[index])
+                                : "undefined"}
+                            </span>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+          {error && renderErr(error)}
+        </>
+      )}
     </div>
   );
 };

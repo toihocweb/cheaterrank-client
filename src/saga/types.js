@@ -1,0 +1,10 @@
+export const GET_TESTS = "GET_TESTS";
+export const FETCHING_TESTS = "FETCHING_TESTS";
+export const GETTING_TEST = "GETTING_TEST";
+export const GET_TEST = "GET_TEST";
+export const GETTING_RESULT = "GETTING_RESULT";
+export const GET_RESULT = "GET_RESULT";
+export const GETTING_LOADING = "GETTING_LOADING";
+export const GET_LOADING = "GET_LOADING";
+export const GETTING_ERROR = "GETTING_ERROR";
+export const GET_ERROR = "GET_ERROR";

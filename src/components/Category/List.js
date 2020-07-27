@@ -1,6 +1,5 @@
 import React from "react";
 import Item from "./Item";
-import axios from "axios";
 
 const List = () => {
   return (
