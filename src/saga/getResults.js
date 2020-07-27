@@ -9,7 +9,6 @@ export const getResults = async (userCode) => {
     if (res.data.includes("Error")) {
       return res.data;
     } else {
-      console.log(eval("(" + res.data + ")"));
       return eval("(" + res.data + ")");
     }
   } catch (error) {}

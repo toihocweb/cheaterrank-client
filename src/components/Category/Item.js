@@ -1,6 +1,6 @@
 import React from "react";
-import classes from "./style.module.scss";
 import { Link } from "react-router-dom";
+import classes from "./style.module.scss";
 
 const Item = ({ title, lang, banner }) => {
   return (

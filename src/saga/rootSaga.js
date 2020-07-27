@@ -32,7 +32,6 @@ function* getResult(action) {
   yield put({ type: GET_ERROR, error: "" });
   try {
     let data = yield getResults(action.userCode);
-    console.log("data ", data);
     if (typeof data === "object") {
       yield put({ type: GET_RESULT, data });
     } else {
