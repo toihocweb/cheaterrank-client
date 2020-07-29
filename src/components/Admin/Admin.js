@@ -16,7 +16,7 @@ const Admin = () => {
       outputs,
       desc,
     };
-    await Axios.post(`${apiUrl}/api/cheaterrank/test`, dataPost);
+    await Axios.post(`${apiUrl}/api/v1/cheaterrank/test`, dataPost);
   };
 
   return (
