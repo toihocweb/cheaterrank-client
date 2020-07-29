@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import classes from "./style.module.scss";
 import Axios from "axios";
+import { apiUrl } from "../../utils /api";
 
 const Admin = () => {
   const [inputs, setInputs] = useState("");
@@ -15,7 +16,7 @@ const Admin = () => {
       outputs,
       desc,
     };
-    await Axios.post("http://localhost:8000/api/cheaterrank/test", dataPost);
+    await Axios.post(`${apiUrl}/api/cheaterrank/test`, dataPost);
   };
 
   return (
