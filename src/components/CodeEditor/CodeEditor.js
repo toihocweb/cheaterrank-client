@@ -15,11 +15,11 @@ const initialCode = `function solution(input){
   // your code here
 }`;
 
-const CodeEditor = () => {
-  const [code, setCode] = useState(initialCode);
+const CodeEditor = ({ currentTestFromStore }) => {
+  const [code, setCode] = useState("");
   const [currentTest, setCurrentTest] = useState(null);
   const dispatch = useDispatch();
-  const currentTesta = useSelector((state) => state.testReducer.currentTest);
+  // const currentTesta = useSelector((state) => state.testReducer.currentTest);
   const loading = useSelector((state) => state.resultReducer.isLoading);
   const result = useSelector((state) => state.resultReducer.results);
   const error = useSelector((state) => state.errorReducer.error);
@@ -27,10 +27,26 @@ const CodeEditor = () => {
   refs.current = [];
 
   useEffect(() => {
-    setCurrentTest(currentTesta);
-    setCode(initialCode);
+    setCurrentTest(currentTestFromStore);
+    if (currentTestFromStore !== null) {
+      setCode(setDesc(currentTestFromStore.desc));
+    }
     return () => {};
-  }, [currentTesta]);
+  }, [currentTestFromStore]);
+
+  const setDesc = (text = "") => {
+    const final_desc = text
+      .split("\n")
+      .map((val) => {
+        return `// ${val}`;
+      })
+      .join("\n");
+    const init = `function solution(input){
+${final_desc}
+
+}`;
+    return init;
+  };
 
   const addToRefs = (el) => {
     if (el && !refs.current.includes(el)) {
@@ -120,13 +136,6 @@ const CodeEditor = () => {
     >
       {currentTest && (
         <>
-          <div
-            className={classes.question}
-            style={{ background: "#333", color: "white" }}
-          >
-            <h3>Yêu Cầu</h3>
-            <p>{currentTest.desc}</p>
-          </div>
           <div style={{ display: "flex" }} className="wrapper">
             <div className="editor">
               <AceEditor
@@ -152,46 +161,51 @@ const CodeEditor = () => {
             </div>
             <div style={{ marginLeft: 20 }} className={classes.cases}>
               <ul>
-                {JSON.parse(currentTest.inputs).map((val, index) => (
-                  <li key={index}>
-                    <div
-                      onClick={() => handleActive(index)}
-                      className={classes.caseTitle}
-                    >
-                      Test Case {index + 1}
-                      {renderResult(index)}
-                    </div>
-                    <div ref={addToRefs} style={{ display: "none" }}>
-                      <div className={classes.caseDetail}>
-                        <p>Input</p>
-                        <span>{JSON.stringify(val)}</span>
-                        <p style={{ marginTop: 20 }}>Output</p>
-                        <span>
-                          {JSON.stringify(
-                            JSON.parse(currentTest.outputs)[index]
-                          )}
-                        </span>
-
-                        {result && (
-                          <>
-                            <p style={{ marginTop: 20 }}>Your Result</p>
-                            <span
-                              style={{
-                                color: result.failed_cases.includes(index + 1)
-                                  ? "#e74c3c"
-                                  : "#e67e22",
-                              }}
-                            >
-                              {typeof result.code_result[index] !== "undefined"
-                                ? JSON.stringify(result.code_result[index])
-                                : "undefined"}
-                            </span>
-                          </>
-                        )}
+                {JSON.parse(currentTest.inputs.split("'").join('"')).map(
+                  (val, index) => (
+                    <li key={index}>
+                      <div
+                        onClick={() => handleActive(index)}
+                        className={classes.caseTitle}
+                      >
+                        Test Case {index + 1}
+                        {renderResult(index)}
                       </div>
-                    </div>
-                  </li>
-                ))}
+                      <div ref={addToRefs} style={{ display: "none" }}>
+                        <div className={classes.caseDetail}>
+                          <p>Input</p>
+                          <span>{JSON.stringify(val)}</span>
+                          <p style={{ marginTop: 20 }}>Output</p>
+                          <span>
+                            {JSON.stringify(
+                              JSON.parse(
+                                currentTest.outputs.split("'").join('"')
+                              )[index]
+                            )}
+                          </span>
+
+                          {result && (
+                            <>
+                              <p style={{ marginTop: 20 }}>Your Result</p>
+                              <span
+                                style={{
+                                  color: result.failed_cases.includes(index + 1)
+                                    ? "#e74c3c"
+                                    : "#e67e22",
+                                }}
+                              >
+                                {typeof result.code_result[index] !==
+                                "undefined"
+                                  ? JSON.stringify(result.code_result[index])
+                                  : "undefined"}
+                              </span>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    </li>
+                  )
+                )}
               </ul>
             </div>
           </div>

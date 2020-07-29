@@ -24,3 +24,17 @@ button {
 main {
   margin: 20px 0px;
 }
+
+body::-webkit-scrollbar {
+  width: 0.6rem;
+}
+
+body::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 255, 0, 0.7);
+  border-radius: 10px;
+  // outline: 1px solid slategrey;
+}

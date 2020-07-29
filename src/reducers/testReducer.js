@@ -15,7 +15,7 @@ const testReducer = (state = initialState, action) => {
       };
     case GET_TEST:
       const id = action.data;
-      const current = state.tests.find((val) => val.id === id);
+      const current = state.tests.find((val) => val._id === id);
       return {
         ...state,
         currentTest: { ...current },
