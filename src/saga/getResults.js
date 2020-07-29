@@ -4,7 +4,7 @@ import { apiUrl } from "../utils /api";
 export const getResults = async (userCode) => {
   try {
     /*eslint-disable no-eval */
-    const res = await Axios.post(`${apiUrl}/api/test`, userCode);
+    let res = await Axios.post(`${apiUrl}/api/test`, userCode);
 
     if (res.data.includes("Error")) {
       return res.data;

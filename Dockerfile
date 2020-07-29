@@ -10,7 +10,8 @@ COPY package.json /app/package.json
 RUN npm install --silent
 COPY . /app
 RUN npm cache clean --force
-
+ARG REACT_APP_ENV=prod
+ENV REACT_APP_ENV=$REACT_APP_ENVIP
 RUN GENERATE_SOURCEMAP=false npm run build --nomaps
 # production environment
 FROM nginx:1.16.0-alpine
