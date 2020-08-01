@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { postingLogin } from "../actions";
 import { Link } from "react-router-dom";
 import { LoginOutlined, UserOutlined, LockOutlined } from "@ant-design/icons";
+import { GET_AUTH_ERROR } from "../../saga/types";
 
 const Login = ({ history }) => {
   const [form] = useForm();
@@ -24,7 +25,9 @@ const Login = ({ history }) => {
         },
       ]);
     }
-    return () => {};
+    return () => {
+      dispatch({ type: GET_AUTH_ERROR, error: null });
+    };
   }, [error]);
 
   useEffect(() => {

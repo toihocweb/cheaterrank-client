@@ -11,6 +11,7 @@ import {
   LockOutlined,
   MailOutlined,
 } from "@ant-design/icons";
+import { GET_AUTH_ERROR } from "../../saga/types";
 
 const Register = ({ history }) => {
   const [form] = useForm();
@@ -29,7 +30,9 @@ const Register = ({ history }) => {
         },
       ]);
     }
-    return () => {};
+    return () => {
+      dispatch({ type: GET_AUTH_ERROR, error: null });
+    };
   }, [error]);
 
   const onFinish = (values) => {
