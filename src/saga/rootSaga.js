@@ -9,9 +9,13 @@ import {
   GET_LOADING,
   GETTING_LOADING,
   GET_ERROR,
+  POST_LOGIN,
+  POSTING_LOGIN,
+  GET_AUTH_ERROR,
 } from "./types";
 import { getTests } from "./getTests";
 import { getResults } from "./getResults";
+import { login } from "./postLogin";
 
 function* getAllTests() {
   try {
@@ -57,12 +61,23 @@ function* getLoading(action) {
   } catch (error) {}
 }
 
+function* postLogin(action) {
+  try {
+    const res = yield login(action.data);
+    yield put({ type: POST_LOGIN, data: res.data });
+    yield put({ type: GET_AUTH_ERROR, error: null });
+  } catch (error) {
+    yield put({ type: GET_AUTH_ERROR, error: error.response.data });
+  }
+}
+
 function* rootSaga() {
   yield all([
     takeLatest(FETCHING_TESTS, getAllTests),
     takeLatest(GETTING_TEST, getTest),
     takeLatest(GETTING_RESULT, getResult),
     takeLatest(GETTING_LOADING, getLoading),
+    takeLatest(POSTING_LOGIN, postLogin),
   ]);
 }
 

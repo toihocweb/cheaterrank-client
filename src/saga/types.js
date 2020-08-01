@@ -7,4 +7,7 @@ export const GET_RESULT = "GET_RESULT";
 export const GETTING_LOADING = "GETTING_LOADING";
 export const GET_LOADING = "GET_LOADING";
 export const GETTING_ERROR = "GETTING_ERROR";
+export const POST_LOGIN = "POST_LOGIN";
+export const POSTING_LOGIN = "POSTING_LOGIN";
+export const GET_AUTH_ERROR = "GET_AUTH_ERROR";
 export const GET_ERROR = "GET_ERROR";

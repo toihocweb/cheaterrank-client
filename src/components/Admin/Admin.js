@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import classes from "./style.module.scss";
 import Axios from "axios";
-import { apiUrl } from "../../utils /api";
+import { apiUrl } from "../../utils/api";
 
 const Admin = () => {
   const [inputs, setInputs] = useState("");

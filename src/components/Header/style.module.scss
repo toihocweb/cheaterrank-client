@@ -8,6 +8,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  a {
+    color: #333 !important;
+  }
 }
 .BtnLogin {
   padding: 0.5rem 1rem;

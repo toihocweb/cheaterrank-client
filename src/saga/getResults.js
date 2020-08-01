@@ -1,5 +1,5 @@
 import Axios from "axios";
-import { serverUrl } from "../utils /api";
+import { serverUrl } from "../utils/api";
 
 export const getResults = async (userCode) => {
   try {
