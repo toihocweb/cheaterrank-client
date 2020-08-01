@@ -1,0 +1,23 @@
+.Aside {
+  background: #333;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 200px;
+  z-index: 999;
+  color: rgb(0, 255, 0);
+  ul {
+    li {
+      padding: 10px 0px;
+      text-align: center;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  }
+}
+
+.active {
+  background: #282424;
+  box-shadow: inset 5px 7px 23px 0px #333;
+}
