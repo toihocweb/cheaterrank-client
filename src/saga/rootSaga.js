@@ -9,13 +9,15 @@ import {
   GET_LOADING,
   GETTING_LOADING,
   GET_ERROR,
-  POST_LOGIN,
   POSTING_LOGIN,
   GET_AUTH_ERROR,
+  SET_CURRENT_USER,
 } from "./types";
 import { getTests } from "./getTests";
 import { getResults } from "./getResults";
 import { login } from "./postLogin";
+import jwt_decode from "jwt-decode";
+import setAuthToken from "../utils/setAuthToken";
 
 function* getAllTests() {
   try {
@@ -64,8 +66,18 @@ function* getLoading(action) {
 function* postLogin(action) {
   try {
     const res = yield login(action.data);
-    yield put({ type: POST_LOGIN, data: res.data });
+    // Save to localStorage
+    const { token } = res;
+    // Set token to ls
+    localStorage.setItem("jwtToken", token);
+    // Set token to Auth header
+    setAuthToken(token);
+    // Decode token to get user data
+    const decoded = jwt_decode(token);
+    yield put({ type: SET_CURRENT_USER, data: decoded });
     yield put({ type: GET_AUTH_ERROR, error: null });
+    const { history } = action.data;
+    history.push("/");
   } catch (error) {
     yield put({ type: GET_AUTH_ERROR, error: error.response.data });
   }

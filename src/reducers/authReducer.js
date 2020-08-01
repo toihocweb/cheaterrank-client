@@ -1,12 +1,13 @@
-import { POST_LOGIN } from "../saga/types";
-
+import { SET_CURRENT_USER } from "../saga/types";
+import setAuthToken from "../utils/setAuthToken";
+import jwt_decode from "jwt-decode";
 const initialState = {
   currentUser: null,
 };
 
 const authReducer = (state = initialState, action) => {
   switch (action.type) {
-    case POST_LOGIN:
+    case SET_CURRENT_USER:
       return {
         ...state,
         currentUser: action.data,

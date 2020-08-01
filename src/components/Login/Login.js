@@ -1,18 +1,22 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Input, Button } from "antd";
 import classes from "./style.module.scss";
 import { useForm } from "antd/lib/form/Form";
 import { useDispatch, useSelector } from "react-redux";
 import { postingLogin } from "../actions";
+import { Link } from "react-router-dom";
+import { LoginOutlined, UserOutlined, LockOutlined } from "@ant-design/icons";
 
-const Login = () => {
+const Login = ({ history }) => {
   const [form] = useForm();
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const error = useSelector((state) => state.authErrorReducer.error);
-
+  const currentUser = useSelector((state) => state.authReducer.currentUser);
   useEffect(() => {
     if (error) {
       const fieldErr = error.field;
+      setLoading(false);
       form.setFields([
         {
           name: fieldErr,
@@ -23,9 +27,17 @@ const Login = () => {
     return () => {};
   }, [error]);
 
+  useEffect(() => {
+    if (currentUser) {
+      setLoading(false);
+    }
+    return () => {};
+  }, [currentUser]);
+
   const onFinish = (values) => {
     const { email, password } = values;
-    dispatch(postingLogin({ email, password }));
+    setLoading(true);
+    dispatch(postingLogin({ email, password, history }));
   };
 
   const onFinishFailed = (errorInfo) => {};
@@ -52,7 +64,7 @@ const Login = () => {
               },
             ]}
           >
-            <Input />
+            <Input size="large" prefix={<UserOutlined />} placeholder="Email" />
           </Form.Item>
 
           <Form.Item
@@ -60,12 +72,25 @@ const Login = () => {
             name="password"
             rules={[{ required: true, message: "Please input your password!" }]}
           >
-            <Input.Password />
+            <Input.Password
+              placeholder="Password"
+              size="large"
+              prefix={<LockOutlined />}
+            />
           </Form.Item>
-
+          <Form.Item style={{ textAlign: "right" }}>
+            <Link to="/register">Don't have an account?</Link>
+          </Form.Item>
           <Form.Item>
-            <Button size="large" type="primary" htmlType="submit">
-              Submit
+            <Button
+              style={{ width: "100%" }}
+              size="large"
+              type="primary"
+              htmlType="submit"
+              disabled={loading ? "disabled" : ""}
+              icon={<LoginOutlined />}
+            >
+              Login
             </Button>
           </Form.Item>
         </Form>
