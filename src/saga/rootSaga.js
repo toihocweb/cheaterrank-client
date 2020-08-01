@@ -12,12 +12,14 @@ import {
   POSTING_LOGIN,
   GET_AUTH_ERROR,
   SET_CURRENT_USER,
+  SET_LOGOUT,
+  POST_REGISTER,
 } from "./types";
 import { getTests } from "./getTests";
 import { getResults } from "./getResults";
-import { login } from "./postLogin";
 import jwt_decode from "jwt-decode";
 import setAuthToken from "../utils/setAuthToken";
+import { login, register } from "./auth";
 
 function* getAllTests() {
   try {
@@ -82,6 +84,28 @@ function* postLogin(action) {
     yield put({ type: GET_AUTH_ERROR, error: error.response.data });
   }
 }
+function* postRegister(action) {
+  try {
+    yield register(action.data);
+    yield put({ type: GET_AUTH_ERROR, error: null });
+    const { history } = action.data;
+    history.push("/login");
+  } catch (error) {
+    yield put({ type: GET_AUTH_ERROR, error: error.response.data });
+  }
+}
+
+function* setLogout(action) {
+  try {
+    // Remove token from localStorage
+    localStorage.removeItem("jwtToken");
+    // Remove auth header for future requests
+    setAuthToken(false);
+    // Set current user to {} which will set isAuthenticated to false
+    yield put({ type: SET_CURRENT_USER, data: null });
+    action.data.push("/login");
+  } catch (error) {}
+}
 
 function* rootSaga() {
   yield all([
@@ -90,6 +114,8 @@ function* rootSaga() {
     takeLatest(GETTING_RESULT, getResult),
     takeLatest(GETTING_LOADING, getLoading),
     takeLatest(POSTING_LOGIN, postLogin),
+    takeLatest(POST_REGISTER, postRegister),
+    takeLatest(SET_LOGOUT, setLogout),
   ]);
 }
 

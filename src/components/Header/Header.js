@@ -1,13 +1,18 @@
 import React from "react";
 import classes from "./style.module.scss";
-import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { Link, withRouter } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 import { Menu } from "antd";
+import { logoutUser } from "../actions";
 const { SubMenu } = Menu;
 
-const Header = () => {
+const Header = ({ history }) => {
   const currentUser = useSelector((state) => state.authReducer.currentUser);
+  const dispatch = useDispatch();
 
+  const handleLogout = () => {
+    dispatch(logoutUser(history));
+  };
   return (
     <header className={classes.header}>
       <div className="container">
@@ -25,12 +30,13 @@ const Header = () => {
                       height="36"
                       style={{ borderRadius: "50%" }}
                       src={currentUser.avatar}
+                      alt="avatar"
                     />
                   }
                 >
                   <Menu.Item>{`Welcome, ${currentUser.name}`}</Menu.Item>
                   <Menu.Item>Setting</Menu.Item>
-                  <Menu.Item>Logout</Menu.Item>
+                  <Menu.Item onClick={handleLogout}>Logout</Menu.Item>
                 </SubMenu>
               </Menu>
             ) : (
@@ -54,4 +60,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default withRouter(Header);

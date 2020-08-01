@@ -5,6 +5,8 @@ import {
   GETTING_LOADING,
   POSTING_LOGIN,
   SET_CURRENT_USER,
+  SET_LOGOUT,
+  POST_REGISTER,
 } from "../../saga/types";
 
 export const fetchingTests = () => {
@@ -41,9 +43,22 @@ export const postingLogin = (data) => {
   };
 };
 
+export const postingRegister = (data) => {
+  return {
+    type: POST_REGISTER,
+    data,
+  };
+};
+
 export const setCurrentUser = (user) => {
   return {
     type: SET_CURRENT_USER,
     data: user,
+  };
+};
+export const logoutUser = (history) => {
+  return {
+    type: SET_LOGOUT,
+    data: history,
   };
 };

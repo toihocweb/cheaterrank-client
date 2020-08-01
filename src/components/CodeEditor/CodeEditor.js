@@ -10,12 +10,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faTimes, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { useSelector, useDispatch } from "react-redux";
 import { gettingResult, gettingLoading } from "../actions";
+import { ArrowLeftOutlined } from "@ant-design/icons";
+import { withRouter } from "react-router-dom";
 
 const initialCode = `function solution(input){
   // your code here
 }`;
 
-const CodeEditor = ({ currentTestFromStore }) => {
+const CodeEditor = ({ currentTestFromStore, history }) => {
   const [code, setCode] = useState("");
   const [currentTest, setCurrentTest] = useState(null);
   const dispatch = useDispatch();
@@ -130,10 +132,19 @@ ${final_desc}
       style={{
         marginLeft: 220,
         paddingRight: 40,
-        paddingTop: 40,
+        paddingTop: 10,
         paddingBottom: 100,
       }}
     >
+      <ArrowLeftOutlined
+        style={{
+          fontSize: 20,
+          color: "lime",
+          marginBottom: 10,
+          cursor: "pointer",
+        }}
+        onClick={() => history.push("/")}
+      />
       {currentTest && (
         <>
           <div style={{ display: "flex" }} className="wrapper">
@@ -216,4 +227,4 @@ ${final_desc}
   );
 };
 
-export default CodeEditor;
+export default withRouter(CodeEditor);

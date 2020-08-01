@@ -3,16 +3,21 @@ import { Form, Input, Button } from "antd";
 import classes from "./style.module.scss";
 import { useForm } from "antd/lib/form/Form";
 import { useDispatch, useSelector } from "react-redux";
-import { postingLogin } from "../actions";
+import { postingRegister } from "../actions";
 import { Link } from "react-router-dom";
-import { LoginOutlined, UserOutlined, LockOutlined } from "@ant-design/icons";
+import {
+  LoginOutlined,
+  UserOutlined,
+  LockOutlined,
+  MailOutlined,
+} from "@ant-design/icons";
 
-const Login = ({ history }) => {
+const Register = ({ history }) => {
   const [form] = useForm();
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const error = useSelector((state) => state.authErrorReducer.error);
-  const currentUser = useSelector((state) => state.authReducer.currentUser);
+
   useEffect(() => {
     if (error) {
       const fieldErr = error.field;
@@ -27,24 +32,16 @@ const Login = ({ history }) => {
     return () => {};
   }, [error]);
 
-  useEffect(() => {
-    if (currentUser) {
-      setLoading(false);
-    }
-    return () => {};
-  }, [currentUser]);
-
   const onFinish = (values) => {
-    const { email, password } = values;
+    const { name, email, password, password2 } = values;
     setLoading(true);
-    dispatch(postingLogin({ email, password, history }));
+    dispatch(postingRegister({ name, email, password, password2, history }));
   };
 
   const onFinishFailed = (errorInfo) => {};
-
   return (
     <div className={classes.Wrapper}>
-      <div className={classes.Login}>
+      <div className={classes.Register}>
         <Form
           name="basic"
           initialValues={{ remember: true }}
@@ -60,6 +57,18 @@ const Login = ({ history }) => {
             Back
           </Link>
           <Form.Item
+            label="Name"
+            name="name"
+            rules={[
+              {
+                required: true,
+                message: "Please input your name!",
+              },
+            ]}
+          >
+            <Input size="large" prefix={<UserOutlined />} placeholder="Name" />
+          </Form.Item>
+          <Form.Item
             label="Email"
             name="email"
             rules={[
@@ -70,7 +79,7 @@ const Login = ({ history }) => {
               },
             ]}
           >
-            <Input size="large" prefix={<UserOutlined />} placeholder="Email" />
+            <Input size="large" prefix={<MailOutlined />} placeholder="Email" />
           </Form.Item>
 
           <Form.Item
@@ -84,8 +93,35 @@ const Login = ({ history }) => {
               prefix={<LockOutlined />}
             />
           </Form.Item>
+          <Form.Item
+            label="Confirm Password"
+            name="password2"
+            dependencies={["password"]}
+            rules={[
+              {
+                required: true,
+                message: "Please confirm your password!",
+              },
+              ({ getFieldValue }) => ({
+                validator(rule, value) {
+                  if (!value || getFieldValue("password") === value) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(
+                    "The two passwords that you entered do not match!"
+                  );
+                },
+              }),
+            ]}
+          >
+            <Input.Password
+              placeholder="Confirm Password"
+              size="large"
+              prefix={<LockOutlined />}
+            />
+          </Form.Item>
           <Form.Item style={{ textAlign: "right" }}>
-            <Link to="/register">Don't have an account?</Link>
+            <Link to="/login">I have an account</Link>
           </Form.Item>
           <Form.Item>
             <Button
@@ -96,7 +132,7 @@ const Login = ({ history }) => {
               disabled={loading ? "disabled" : ""}
               icon={<LoginOutlined />}
             >
-              Login
+              Register
             </Button>
           </Form.Item>
         </Form>
@@ -105,4 +141,4 @@ const Login = ({ history }) => {
   );
 };
 
-export default Login;
+export default Register;

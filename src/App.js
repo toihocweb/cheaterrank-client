@@ -7,7 +7,9 @@ import Login from "./components/Login/Login";
 import setAuthToken from "./utils/setAuthToken";
 import jwt_decode from "jwt-decode";
 import store from "./store";
-import { setCurrentUser } from "./components/actions";
+import { setCurrentUser, logoutUser } from "./components/actions";
+import PrivateRoute from "./components/common/PrivateRoute";
+import Register from "./components/Register/Register";
 // Check for token
 if (localStorage.jwtToken) {
   // Set auth token header auth
@@ -21,7 +23,7 @@ if (localStorage.jwtToken) {
   const currentTime = Date.now() / 1000;
   if (decoded.exp < currentTime) {
     // Logout user
-    // store.dispatch(logoutUser());
+    store.dispatch(logoutUser());
     // Redirect to login
     window.location.href = "/login";
   }
@@ -33,8 +35,9 @@ const App = () => {
       <Switch>
         <Route component={Home} path="/" exact />
         <Route component={Login} path="/login" />
-        <Route component={Admin} path="/admin" />
-        <Route component={Lang} path="/:lang" />
+        <Route component={Register} path="/register" />
+        <PrivateRoute component={Admin} path="/admin" />
+        <PrivateRoute component={Lang} path="/:lang" />
         <Route render={(props) => <h1>Page Not Found</h1>} path="*" exact />
       </Switch>
     </Router>

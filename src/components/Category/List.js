@@ -13,12 +13,12 @@ const List = () => {
         <Item
           title="Practice CSS"
           lang="css"
-          banner="https://picsum.photos/1200/800"
+          banner="https://picsum.photos/1201/800"
         />
         <Item
           title="Practice HTML"
           lang="html"
-          banner="https://picsum.photos/1200/800"
+          banner="https://picsum.photos/1202/800"
         />
       </div>
     </div>

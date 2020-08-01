@@ -1,6 +1,4 @@
 import { SET_CURRENT_USER } from "../saga/types";
-import setAuthToken from "../utils/setAuthToken";
-import jwt_decode from "jwt-decode";
 const initialState = {
   currentUser: null,
 };
@@ -12,7 +10,6 @@ const authReducer = (state = initialState, action) => {
         ...state,
         currentUser: action.data,
       };
-
     default:
       return state;
   }
