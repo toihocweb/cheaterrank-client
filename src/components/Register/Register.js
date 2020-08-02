@@ -67,6 +67,11 @@ const Register = ({ history }) => {
                 required: true,
                 message: "Please input your name!",
               },
+              {
+                min: 6,
+                max: 30,
+                message: "Name must be between 6 and 30 characters!",
+              },
             ]}
           >
             <Input size="large" prefix={<UserOutlined />} placeholder="Name" />
