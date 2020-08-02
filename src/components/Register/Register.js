@@ -93,7 +93,13 @@ const Register = ({ history }) => {
           <Form.Item
             label="Password"
             name="password"
-            rules={[{ required: true, message: "Please input your password!" }]}
+            rules={[
+              { required: true, message: "Please input your password!" },
+              {
+                min: 6,
+                message: "Password must be at least 6 characters",
+              },
+            ]}
           >
             <Input.Password
               placeholder="Password"
@@ -109,6 +115,10 @@ const Register = ({ history }) => {
               {
                 required: true,
                 message: "Please confirm your password!",
+              },
+              {
+                min: 6,
+                message: "Password must be at least 6 characters",
               },
               ({ getFieldValue }) => ({
                 validator(rule, value) {
