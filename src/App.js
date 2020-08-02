@@ -10,6 +10,7 @@ import store from "./store";
 import { setCurrentUser, logoutUser } from "./components/actions";
 import PrivateRoute from "./components/common/PrivateRoute";
 import Register from "./components/Register/Register";
+import AuthRoute from "./components/common/AuthRoute";
 // Check for token
 if (localStorage.jwtToken) {
   // Set auth token header auth
@@ -37,7 +38,7 @@ const App = () => {
         <Route component={Login} path="/login" />
         <Route component={Register} path="/register" />
         <PrivateRoute component={Admin} path="/admin" />
-        <PrivateRoute component={Lang} path="/:lang" />
+        <AuthRoute component={Lang} path="/:lang" />
         <Route render={(props) => <h1>Page Not Found</h1>} path="*" exact />
       </Switch>
     </Router>
