@@ -6,12 +6,12 @@ import "ace-builds/src-noconflict/snippets/javascript";
 import "ace-builds/src-noconflict/ace";
 
 import classes from "./style.module.scss";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheck, faTimes, faSpinner } from "@fortawesome/free-solid-svg-icons";
+
 import { useSelector, useDispatch } from "react-redux";
 import { gettingResult, gettingLoading } from "../actions";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { withRouter } from "react-router-dom";
+import TestCase from "./TestCase";
 
 const initialCode = `function solution(input){
   // your code here
@@ -23,10 +23,7 @@ const CodeEditor = ({ currentTestFromStore, history }) => {
   const dispatch = useDispatch();
   // const currentTesta = useSelector((state) => state.testReducer.currentTest);
   const loading = useSelector((state) => state.resultReducer.isLoading);
-  const result = useSelector((state) => state.resultReducer.results);
   const error = useSelector((state) => state.errorReducer.error);
-  const refs = useRef([]);
-  refs.current = [];
 
   useEffect(() => {
     setCurrentTest(currentTestFromStore);
@@ -50,63 +47,8 @@ ${final_desc}
     return init;
   };
 
-  const addToRefs = (el) => {
-    if (el && !refs.current.includes(el)) {
-      el.style.display = "none";
-      refs.current.push(el);
-    }
-  };
-
   const onChange = (newValue) => {
     setCode(newValue);
-  };
-
-  const renderIcon = (passed) => {
-    return passed ? (
-      <FontAwesomeIcon
-        style={{ marginLeft: 10 }}
-        color="rgb(0, 255, 0)"
-        size="lg"
-        icon={faCheck}
-      />
-    ) : (
-      <FontAwesomeIcon
-        style={{ marginLeft: 10 }}
-        color="#e74c3c"
-        size="lg"
-        icon={faTimes}
-      />
-    );
-  };
-
-  const renderResult = (index) => {
-    if (result) {
-      if (loading) {
-        return (
-          <FontAwesomeIcon
-            className={classes.rotate}
-            style={{
-              marginLeft: 10,
-            }}
-            color="white"
-            size="lg"
-            icon={faSpinner}
-          />
-        );
-      } else {
-        return result.failed_cases.includes(index + 1)
-          ? renderIcon(false)
-          : renderIcon(true);
-      }
-    }
-  };
-
-  const handleActive = (idx) => {
-    if (refs.current[idx].style.display !== "none") {
-      refs.current[idx].style.display = "none";
-    } else {
-      refs.current[idx].style.display = "block";
-    }
   };
 
   const renderErr = (msg) => <div className={classes.err}>{msg}</div>;
@@ -170,55 +112,7 @@ ${final_desc}
                 </button>
               </div>
             </div>
-            <div style={{ marginLeft: 20 }} className={classes.cases}>
-              <ul>
-                {JSON.parse(currentTest.inputs.split("'").join('"')).map(
-                  (val, index) => (
-                    <li key={index}>
-                      <div
-                        onClick={() => handleActive(index)}
-                        className={classes.caseTitle}
-                      >
-                        Test Case {index + 1}
-                        {renderResult(index)}
-                      </div>
-                      <div ref={addToRefs} style={{ display: "none" }}>
-                        <div className={classes.caseDetail}>
-                          <p>Input</p>
-                          <span>{JSON.stringify(val)}</span>
-                          <p style={{ marginTop: 20 }}>Output</p>
-                          <span>
-                            {JSON.stringify(
-                              JSON.parse(
-                                currentTest.outputs.split("'").join('"')
-                              )[index]
-                            )}
-                          </span>
-
-                          {result && (
-                            <>
-                              <p style={{ marginTop: 20 }}>Your Result</p>
-                              <span
-                                style={{
-                                  color: result.failed_cases.includes(index + 1)
-                                    ? "#e74c3c"
-                                    : "#e67e22",
-                                }}
-                              >
-                                {typeof result.code_result[index] !==
-                                "undefined"
-                                  ? JSON.stringify(result.code_result[index])
-                                  : "undefined"}
-                              </span>
-                            </>
-                          )}
-                        </div>
-                      </div>
-                    </li>
-                  )
-                )}
-              </ul>
-            </div>
+            <TestCase currentTest={currentTest} />
           </div>
           {error && renderErr(error)}
         </>
