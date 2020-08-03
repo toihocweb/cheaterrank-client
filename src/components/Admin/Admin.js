@@ -2,58 +2,153 @@ import React, { useState } from "react";
 import classes from "./style.module.scss";
 import Axios from "axios";
 import { apiUrl } from "../../utils/api";
+import { Form, Input, Button, Select, Space, message } from "antd";
+import { Link } from "react-router-dom";
+import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
+import { useForm } from "antd/lib/form/Form";
+
+const { Option } = Select;
+const { TextArea } = Input;
 
 const Admin = () => {
-  const [inputs, setInputs] = useState("");
-  const [outputs, setOutputs] = useState("");
-  const [desc, setDesc] = useState("");
+  const [form] = useForm();
+  const [level, setLevel] = useState(0);
+  const [lang, setLang] = useState("javascript");
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const onFinish = async (values) => {
+    const { desc } = values;
+    const inputs = [];
+    const outputs = [];
+
+    if (values?.testcases) {
+      for (let caseObj of values.testcases) {
+        inputs.push(caseObj.input);
+        outputs.push(caseObj.output);
+      }
+    }
     const dataPost = {
-      language: "javascript",
-      inputs,
-      outputs,
+      language: lang,
+      level,
+      inputs: `[${String(inputs)}]`,
+      outputs: `[${String(outputs)}]`,
       desc,
     };
-    await Axios.post(`${apiUrl}/api/v1/cheaterrank/test`, dataPost);
+    const res = await Axios.post(`${apiUrl}/api/v1/cheaterrank/test`, dataPost);
+    if (res) {
+      message.success("Post Test Successfully!");
+    }
   };
+
+  const handleChangeLevel = (values) => {
+    setLevel(values);
+  };
+  const handleChangeLang = (values) => {
+    setLang(values);
+  };
+
+  const onFinishFailed = (errorInfo) => {};
 
   return (
     <div className={classes.addTestForm}>
-      <form onSubmit={handleSubmit} className={classes.form}>
-        <label htmlFor="">
-          Inputs
-          <input
-            value={inputs}
-            onChange={(e) => setInputs(e.target.value)}
-            type="text"
-            className="inputs"
-          />
-        </label>
-        <label htmlFor="">
-          Outputs
-          <input
-            value={outputs}
-            onChange={(e) => setOutputs(e.target.value)}
-            type="text"
-            className="outputs"
-          />
-        </label>
-        <label htmlFor="">
-          Description
-          <textarea
-            name=""
-            id=""
-            cols="30"
-            rows="10"
-            className="desc"
-            onChange={(e) => setDesc(e.target.value)}
-            value={desc}
-          ></textarea>
-        </label>
-        <button>Submit</button>
-      </form>
+      <Form
+        name="basic"
+        initialValues={{ remember: true }}
+        onFinish={onFinish}
+        onFinishFailed={onFinishFailed}
+        layout="vertical"
+        style={{ padding: 40, background: "white", width: 500 }}
+        form={form}
+      >
+        <Link to="/" style={{ marginBottom: 20, textDecoration: "underline" }}>
+          Back
+        </Link>
+
+        <Form.Item label="Level" name="level">
+          <Select defaultValue="0" value={level} onChange={handleChangeLevel}>
+            <Option value="0">Easy</Option>
+            <Option value="1">Hard</Option>
+            <Option value="2">Expert</Option>
+          </Select>
+        </Form.Item>
+        <Form.Item label="Language" name="language">
+          <Select
+            defaultValue="javascript"
+            value={lang}
+            onChange={handleChangeLang}
+          >
+            <Option value="javascript" selected>
+              Javascript
+            </Option>
+            <Option value="c">C++</Option>
+          </Select>
+        </Form.Item>
+        <Form.List name="testcases">
+          {(fields, { add, remove }) => {
+            return (
+              <div>
+                {fields.map((field) => (
+                  <Space
+                    key={field.key}
+                    style={{ display: "flex", marginBottom: 8 }}
+                    align="start"
+                  >
+                    <Form.Item
+                      {...field}
+                      name={[field.name, "input"]}
+                      fieldKey={[field.fieldKey, "input"]}
+                      rules={[{ required: true, message: "Missing test case" }]}
+                    >
+                      <Input placeholder="input" />
+                    </Form.Item>
+                    <Form.Item
+                      {...field}
+                      name={[field.name, "output"]}
+                      fieldKey={[field.fieldKey, "output"]}
+                      rules={[
+                        { required: true, message: "Missing expected output" },
+                      ]}
+                    >
+                      <Input placeholder="output" />
+                    </Form.Item>
+
+                    <MinusCircleOutlined
+                      onClick={() => {
+                        remove(field.name);
+                      }}
+                    />
+                  </Space>
+                ))}
+
+                <Form.Item>
+                  <Button
+                    type="dashed"
+                    onClick={() => {
+                      add();
+                    }}
+                    block
+                  >
+                    <PlusOutlined /> Add Case
+                  </Button>
+                </Form.Item>
+              </div>
+            );
+          }}
+        </Form.List>
+        <Form.Item name="desc" rules={[{ required: true }]}>
+          <TextArea placeholder="Test Description" allowClear rows="5" />
+        </Form.Item>
+        <Form.Item>
+          <Button
+            style={{ width: "100%" }}
+            size="large"
+            type="primary"
+            htmlType="submit"
+            // disabled={loading ? "disabled" : ""}
+          >
+            Submit
+          </Button>
+        </Form.Item>
+      </Form>
     </div>
   );
 };

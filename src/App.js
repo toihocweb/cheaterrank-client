@@ -5,27 +5,37 @@ import Lang from "./components/Assignment/Lang";
 import Admin from "./components/Admin/Admin";
 import Login from "./components/Login/Login";
 import setAuthToken from "./utils/setAuthToken";
-import jwt_decode from "jwt-decode";
 import store from "./store";
 import { setCurrentUser, logoutUser } from "./components/actions";
 import PrivateRoute from "./components/common/PrivateRoute";
 import Register from "./components/Register/Register";
 import AuthRoute from "./components/common/AuthRoute";
+import jwt from "jsonwebtoken";
+// const decodedToken = jwt.verify(token, keys.secretOrKey);
 // Check for token
 if (localStorage.jwtToken) {
   // Set auth token header auth
   setAuthToken(localStorage.jwtToken);
   // Decode token and get user info and exp
-  const decoded = jwt_decode(localStorage.jwtToken);
-  // Set user and isAuthenticated
-  store.dispatch(setCurrentUser(decoded));
+  // const decoded = jwt_decode(localStorage.jwtToken);
+  try {
+    const decoded = jwt.verify(
+      localStorage.jwtToken.split(" ")[1],
+      process.env.REACT_APP_PRIVATE_KEY
+    );
+    // Set user and isAuthenticated
+    store.dispatch(setCurrentUser(decoded));
 
-  // Check for expired token
-  const currentTime = Date.now() / 1000;
-  if (decoded.exp < currentTime) {
-    // Logout user
-    store.dispatch(logoutUser());
-    // Redirect to login
+    // Check for expired token
+    const currentTime = Date.now() / 1000;
+    if (decoded.exp < currentTime) {
+      // Logout user
+      store.dispatch(logoutUser());
+      // Redirect to login
+      window.location.href = "/login";
+    }
+  } catch (error) {
+    localStorage.removeItem("jwtToken");
     window.location.href = "/login";
   }
 }

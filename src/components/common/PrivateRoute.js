@@ -12,7 +12,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
         currentUser?.role === "admin" ? (
           <Component {...props} />
         ) : (
-          <Redirect to="/login" />
+          <Redirect to="/" />
         )
       }
     />

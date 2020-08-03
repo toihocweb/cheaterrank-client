@@ -18,7 +18,7 @@ const Header = ({ history }) => {
       <div className="container">
         <div className={classes.sub}>
           <h2>
-            <Link to="/">Logo</Link>
+            <Link to="/"></Link>
           </h2>
           <nav>
             {currentUser ? (

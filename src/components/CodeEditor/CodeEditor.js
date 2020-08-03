@@ -192,7 +192,9 @@ ${final_desc}
                               JSON.parse(
                                 currentTest.outputs.split("'").join('"')
                               )[index]
-                            )}
+                            )
+                              .split("\\")
+                              .join("")}
                           </span>
 
                           {result && (

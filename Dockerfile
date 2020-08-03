@@ -12,6 +12,8 @@ COPY . /app
 RUN npm cache clean --force
 ARG REACT_APP_ENV=prod
 ENV REACT_APP_ENV=$REACT_APP_ENV
+ARG REACT_APP_PRIVATE_KEY=gtijo3ttret34665rgf
+ENV REACT_APP_PRIVATE_KEY=$REACT_APP_PRIVATE_KEY
 RUN GENERATE_SOURCEMAP=false npm run build --nomaps
 # production environment
 FROM nginx:1.16.0-alpine
