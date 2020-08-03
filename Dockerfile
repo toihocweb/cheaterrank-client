@@ -10,6 +10,7 @@ COPY package.json /app/package.json
 RUN npm install --silent
 COPY . /app
 RUN npm cache clean --force
+RUN export NODE_OPTIONS=--max_old_space_size=4096
 ARG REACT_APP_ENV=prod
 ENV REACT_APP_ENV=$REACT_APP_ENV
 ARG REACT_APP_PRIVATE_KEY=gtijo3ttret34665rgf
