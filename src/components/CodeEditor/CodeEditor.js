@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/mode-javascript";
 import "ace-builds/src-noconflict/theme-monokai";
@@ -37,11 +37,13 @@ const CodeEditor = ({ currentTestFromStore, history }) => {
     const final_desc = text
       .split("\n")
       .map((val) => {
-        return `// ${val}`;
+        return `${val}`;
       })
       .join("\n");
     const init = `function solution(input){
+/*
 ${final_desc}
+*/
 
 }`;
     return init;
@@ -55,7 +57,7 @@ ${final_desc}
 
   const handleSubmit = async () => {
     dispatch(gettingLoading(true));
-    const regex = /\{((.|\n)*)(.*?)\}/gm;
+    const regex = /solution\(input\)\{((.|\n)*)(.*?)\}/gm;
     const refactor_code = regex.exec(code);
     if (refactor_code !== null) {
       const userCode = {

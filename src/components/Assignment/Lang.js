@@ -3,12 +3,17 @@ import Aside from "../Aside/Aside";
 import CodeEditor from "../CodeEditor/CodeEditor";
 import { useSelector } from "react-redux";
 import HashLoader from "react-spinners/HashLoader";
+import openSocket from "socket.io-client";
+import { Button } from "antd";
 
 const Lang = () => {
   const [loading, setLoading] = useState(false);
   const currentTestFromStore = useSelector(
     (state) => state.testReducer.currentTest
   );
+
+  const currentUser = useSelector((state) => state.authReducer.currentUser);
+
   useEffect(() => {
     if (currentTestFromStore) {
       setTimeout(() => {
@@ -19,6 +24,14 @@ const Lang = () => {
     }
     return () => {};
   }, [currentTestFromStore]);
+
+  // useEffect(() => {
+  //   const socket = openSocket("http://localhost:8000");
+
+  //   socket.emit("user", currentUser.name);
+  //   socket.on("get online users", (data) => console.log(JSON.parse(data)));
+  //   return () => {};
+  // }, []);
 
   const renderLoading = () => (
     <div

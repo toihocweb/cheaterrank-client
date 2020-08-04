@@ -10,7 +10,7 @@ const List = () => {
           lang="javascript"
           banner="https://picsum.photos/1200/800"
         />
-        <Item
+        {/* <Item
           title="Practice CSS"
           lang="css"
           banner="https://picsum.photos/1201/800"
@@ -19,7 +19,7 @@ const List = () => {
           title="Practice HTML"
           lang="html"
           banner="https://picsum.photos/1202/800"
-        />
+        /> */}
       </div>
     </div>
   );

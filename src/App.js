@@ -11,13 +11,13 @@ import PrivateRoute from "./components/common/PrivateRoute";
 import Register from "./components/Register/Register";
 import AuthRoute from "./components/common/AuthRoute";
 import jwt from "jsonwebtoken";
+
 // const decodedToken = jwt.verify(token, keys.secretOrKey);
 // Check for token
 if (localStorage.jwtToken) {
   // Set auth token header auth
   setAuthToken(localStorage.jwtToken);
   // Decode token and get user info and exp
-  // const decoded = jwt_decode(localStorage.jwtToken);
   try {
     const decoded = jwt.verify(
       localStorage.jwtToken.split(" ")[1],
