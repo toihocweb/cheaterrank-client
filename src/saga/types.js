@@ -14,3 +14,5 @@ export const GET_AUTH_ERROR = "GET_AUTH_ERROR";
 export const GET_ERROR = "GET_ERROR";
 export const AUTH_LOADING = "AUTH_LOADING";
 export const SET_LOGOUT = "SET_LOGOUT";
+export const SUBMITTING_CODE = "SUBMITTING_CODE";
+export const SUBMIT_CODE = "SUBMIT_CODE";

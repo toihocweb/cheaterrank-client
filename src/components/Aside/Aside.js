@@ -2,9 +2,7 @@ import React, { useEffect } from "react";
 import classes from "./style.module.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchingTests, gettingTest } from "../actions";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCode } from "@fortawesome/free-solid-svg-icons";
-
+import { CodeOutlined } from "@ant-design/icons";
 const Aside = () => {
   const dispatch = useDispatch();
   const tests = useSelector((state) => state.testReducer.tests);
@@ -33,16 +31,8 @@ const Aside = () => {
                     : ""
                 }
               >
-                Câu {index + 1}
-                <FontAwesomeIcon
-                  className={classes.rotate}
-                  style={{
-                    marginLeft: 10,
-                  }}
-                  color="rgb(0, 255, 0)"
-                  size="sm"
-                  icon={faCode}
-                />
+                Challenge {index + 1}
+                <CodeOutlined style={{ marginLeft: 5 }} />
               </li>
             ))}
         </ul>

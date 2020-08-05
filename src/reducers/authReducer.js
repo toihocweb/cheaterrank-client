@@ -1,4 +1,4 @@
-import { SET_CURRENT_USER } from "../saga/types";
+import { SET_CURRENT_USER, SUBMIT_CODE } from "../saga/types";
 const initialState = {
   currentUser: null,
 };
@@ -10,6 +10,7 @@ const authReducer = (state = initialState, action) => {
         ...state,
         currentUser: action.data,
       };
+
     default:
       return state;
   }

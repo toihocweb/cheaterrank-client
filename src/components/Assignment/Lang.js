@@ -12,7 +12,9 @@ const Lang = () => {
     (state) => state.testReducer.currentTest
   );
 
-  const currentUser = useSelector((state) => state.authReducer.currentUser);
+  const currentUserFromStore = useSelector(
+    (state) => state.authReducer.currentUser
+  );
 
   useEffect(() => {
     if (currentTestFromStore) {
@@ -42,14 +44,17 @@ const Lang = () => {
         justifyContent: "center",
       }}
     >
-      <HashLoader size={80} color={"lime"} loading={loading} />
+      <HashLoader size={80} color={"#1DA57A"} loading={loading} />
     </div>
   );
 
   return !loading ? (
     <>
       <Aside />
-      <CodeEditor currentTestFromStore={currentTestFromStore} />
+      <CodeEditor
+        currentUserFromStore={currentUserFromStore}
+        currentTestFromStore={currentTestFromStore}
+      />
     </>
   ) : (
     renderLoading()

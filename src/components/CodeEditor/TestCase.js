@@ -3,7 +3,7 @@ import classes from "./style.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faTimes, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { useSelector } from "react-redux";
-
+import { CheckOutlined, CloseOutlined, SyncOutlined } from "@ant-design/icons";
 const TestCase = ({ currentTest }) => {
   const result = useSelector((state) => state.resultReducer.results);
   const loading = useSelector((state) => state.resultReducer.isLoading);
@@ -13,18 +13,10 @@ const TestCase = ({ currentTest }) => {
 
   const renderIcon = (passed) => {
     return passed ? (
-      <FontAwesomeIcon
-        style={{ marginLeft: 10 }}
-        color="rgb(0, 255, 0)"
-        size="lg"
-        icon={faCheck}
-      />
+      <CheckOutlined style={{ marginLeft: 10 }} />
     ) : (
-      <FontAwesomeIcon
-        style={{ marginLeft: 10 }}
-        color="#e74c3c"
-        size="lg"
-        icon={faTimes}
+      <CloseOutlined
+        style={{ marginLeft: 10, color: "#e74c3c", fontSize: 16 }}
       />
     );
   };
@@ -47,17 +39,7 @@ const TestCase = ({ currentTest }) => {
   const renderResult = (index) => {
     if (result) {
       if (loading) {
-        return (
-          <FontAwesomeIcon
-            className={classes.rotate}
-            style={{
-              marginLeft: 10,
-            }}
-            color="white"
-            size="lg"
-            icon={faSpinner}
-          />
-        );
+        return <SyncOutlined spin style={{ marginLeft: 10, fontSize: 16 }} />;
       } else {
         return result.failed_cases.includes(index + 1)
           ? renderIcon(false)
@@ -75,6 +57,7 @@ const TestCase = ({ currentTest }) => {
               <div
                 onClick={() => handleActive(index)}
                 className={classes.caseTitle}
+                style={{ display: "flex", alignItems: "center" }}
               >
                 Test Case {index + 1}
                 {renderResult(index)}

@@ -7,6 +7,7 @@ import {
   SET_CURRENT_USER,
   SET_LOGOUT,
   POST_REGISTER,
+  SUBMITTING_CODE,
 } from "../../saga/types";
 
 export const fetchingTests = () => {
@@ -60,5 +61,12 @@ export const logoutUser = (history) => {
   return {
     type: SET_LOGOUT,
     data: history,
+  };
+};
+
+export const submittingCode = (data) => {
+  return {
+    type: SUBMITTING_CODE,
+    data,
   };
 };

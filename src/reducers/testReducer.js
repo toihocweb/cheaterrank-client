@@ -1,4 +1,4 @@
-import { GET_TESTS, GET_TEST } from "../saga/types";
+import { GET_TESTS, GET_TEST, SUBMIT_CODE } from "../saga/types";
 
 const initialState = {
   tests: [],
@@ -19,6 +19,21 @@ const testReducer = (state = initialState, action) => {
       return {
         ...state,
         currentTest: { ...current },
+      };
+    case SUBMIT_CODE:
+      const idx = state.tests.findIndex((val) => val._id === action.data._id);
+
+      return {
+        ...state,
+        tests: [
+          ...state.tests.slice(0, idx),
+          action.data,
+          ...state.tests.slice(idx + 1),
+        ],
+        currentTest: {
+          ...state.currentTest,
+          submitted_users: [...action.data.submitted_users],
+        },
       };
     default:
       return state;

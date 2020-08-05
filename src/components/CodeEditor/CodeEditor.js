@@ -8,44 +8,52 @@ import "ace-builds/src-noconflict/ace";
 import classes from "./style.module.scss";
 
 import { useSelector, useDispatch } from "react-redux";
-import { gettingResult, gettingLoading } from "../actions";
-import { ArrowLeftOutlined } from "@ant-design/icons";
+import { gettingResult, gettingLoading, submittingCode } from "../actions";
+import {
+  ArrowLeftOutlined,
+  CheckOutlined,
+  SendOutlined,
+} from "@ant-design/icons";
 import { withRouter } from "react-router-dom";
 import TestCase from "./TestCase";
+import { Button, Popconfirm, message } from "antd";
 
 const initialCode = `function solution(input){
   // your code here
+
 }`;
 
-const CodeEditor = ({ currentTestFromStore, history }) => {
+const CodeEditor = ({
+  currentTestFromStore,
+  currentUserFromStore,
+  history,
+}) => {
   const [code, setCode] = useState("");
   const [currentTest, setCurrentTest] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
   const dispatch = useDispatch();
-  // const currentTesta = useSelector((state) => state.testReducer.currentTest);
   const loading = useSelector((state) => state.resultReducer.isLoading);
   const error = useSelector((state) => state.errorReducer.error);
 
   useEffect(() => {
     setCurrentTest(currentTestFromStore);
+    setCurrentUser(currentUserFromStore);
     if (currentTestFromStore !== null) {
-      setCode(setDesc(currentTestFromStore.desc));
+      const submitted_users = currentTestFromStore.submitted_users.find(
+        (val) => val.userId === currentUserFromStore.id
+      );
+      if (submitted_users) {
+        setCode(setDesc(submitted_users.code));
+      } else {
+        setCode(setDesc(currentTestFromStore.desc));
+      }
     }
     return () => {};
   }, [currentTestFromStore]);
 
   const setDesc = (text = "") => {
-    const final_desc = text
-      .split("\n")
-      .map((val) => {
-        return `${val}`;
-      })
-      .join("\n");
-    const init = `function solution(input){
-/*
-${final_desc}
-*/
-
-}`;
+    let str = text.replace(/^\s+|\s+$/g, "");
+    const init = `function solution(input){\n${str}\n}`;
     return init;
   };
 
@@ -71,6 +79,24 @@ ${final_desc}
     }
   };
 
+  const handlePostCode = () => {
+    const regex = /solution\(input\)\{((.|\n)*)(.*?)\}/gm;
+    const refactor_code = regex.exec(code);
+    if (refactor_code !== null) {
+      const dataPost = {
+        userId: currentUser.id,
+        testId: currentTest._id,
+        code: refactor_code[1],
+      };
+      dispatch(submittingCode(dataPost));
+      setTimeout(() => {
+        message.success("Submitted Successfully");
+      }, 500);
+    } else {
+      setCode(initialCode);
+    }
+  };
+
   return (
     <div
       style={{
@@ -83,7 +109,7 @@ ${final_desc}
       <ArrowLeftOutlined
         style={{
           fontSize: 20,
-          color: "lime",
+          color: "#1DA57A",
           marginBottom: 10,
           cursor: "pointer",
         }}
@@ -106,12 +132,29 @@ ${final_desc}
                 width="650px"
               />
               <div className={classes.btnActions}>
-                <button
+                <Button
                   onClick={handleSubmit}
-                  style={{ pointerEvents: loading ? "none" : "" }}
+                  style={{
+                    pointerEvents: loading ? "none" : "",
+                    marginRight: 10,
+                  }}
+                  size="large"
+                  type="primary"
+                  icon={<CheckOutlined />}
                 >
-                  {loading ? "Đang kiểm  tra" : "Kiểm tra"}
-                </button>
+                  {loading ? "Testing" : "Test"}
+                </Button>
+                <Popconfirm
+                  title="Are you sure submit this code?"
+                  onConfirm={handlePostCode}
+                  okText="Yes"
+                  cancelText="No"
+                >
+                  <Button type="primary" size="large" icon={<SendOutlined />}>
+                    Submit
+                  </Button>
+                </Popconfirm>
+                ,
               </div>
             </div>
             <TestCase currentTest={currentTest} />

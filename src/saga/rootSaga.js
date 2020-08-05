@@ -14,12 +14,15 @@ import {
   SET_CURRENT_USER,
   SET_LOGOUT,
   POST_REGISTER,
+  SUBMITTING_CODE,
+  SUBMIT_CODE,
 } from "./types";
 import { getTests } from "./getTests";
 import { getResults } from "./getResults";
 import jwt_decode from "jwt-decode";
 import setAuthToken from "../utils/setAuthToken";
 import { login, register } from "./auth";
+import { submit } from "./submit";
 
 function* getAllTests() {
   try {
@@ -98,6 +101,17 @@ function* postRegister(action) {
   }
 }
 
+function* submitCode(action) {
+  try {
+    const res = yield submit(action.data);
+    if (res.code === 201) {
+      yield put({ type: SUBMIT_CODE, data: res.data });
+    } else {
+      yield put({ type: GET_ERROR, error: "some thing wrong" });
+    }
+  } catch (error) {}
+}
+
 function* setLogout(action) {
   try {
     // Remove token from localStorage
@@ -119,6 +133,7 @@ function* rootSaga() {
     takeLatest(POSTING_LOGIN, postLogin),
     takeLatest(POST_REGISTER, postRegister),
     takeLatest(SET_LOGOUT, setLogout),
+    takeLatest(SUBMITTING_CODE, submitCode),
   ]);
 }
 

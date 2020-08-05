@@ -11,17 +11,8 @@
 .btnActions {
   width: 650px;
   display: flex;
-  // justify-content: flex-end;
+
   margin-top: 20px;
-  button {
-    cursor: pointer;
-    padding: 0.5rem 1rem;
-    border-width: 3px;
-    border-style: solid;
-    border-color: rgb(0, 59, 0);
-    font-weight: bold;
-    background: rgb(0, 255, 0);
-  }
 }
 .cases {
   flex-basis: 500px;
@@ -31,7 +22,7 @@
       display: block;
       margin-bottom: 20px;
       border-radius: 3px;
-      color: rgb(0, 255, 0);
+      color: #1da57a;
       font-weight: bold;
     }
   }
