@@ -43,17 +43,19 @@ const CodeEditor = ({
         (val) => val.userId === currentUserFromStore.id
       );
       if (submitted_users) {
-        setCode(setDesc(submitted_users.code));
+        setCode(setDesc(submitted_users.code, false));
       } else {
-        setCode(setDesc(currentTestFromStore.desc));
+        setCode(setDesc(currentTestFromStore.desc, true));
       }
     }
     return () => {};
   }, [currentTestFromStore]);
 
-  const setDesc = (text = "") => {
+  const setDesc = (text = "", isDesc) => {
     let str = text.replace(/^\s+|\s+$/g, "");
-    const init = `function solution(input){\n${str}\n}`;
+    const init = isDesc
+      ? `function solution(input){\n/*\n${str}\n*/\n}`
+      : `function solution(input){\n${str}\n}`;
     return init;
   };
 
