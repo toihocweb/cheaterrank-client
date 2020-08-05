@@ -1,7 +1,5 @@
 import React, { useRef } from "react";
 import classes from "./style.module.scss";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheck, faTimes, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { useSelector } from "react-redux";
 import { CheckOutlined, CloseOutlined, SyncOutlined } from "@ant-design/icons";
 const TestCase = ({ currentTest }) => {
