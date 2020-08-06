@@ -4,14 +4,14 @@ import CodeEditor from "../CodeEditor/CodeEditor";
 import { useSelector } from "react-redux";
 import HashLoader from "react-spinners/HashLoader";
 import openSocket from "socket.io-client";
-import { Button } from "antd";
+import { Button, Popover } from "antd";
 
 const Lang = () => {
   const [loading, setLoading] = useState(false);
   const currentTestFromStore = useSelector(
     (state) => state.testReducer.currentTest
   );
-
+  const [online, setOnline] = useState([]);
   const currentUserFromStore = useSelector(
     (state) => state.authReducer.currentUser
   );
@@ -27,13 +27,15 @@ const Lang = () => {
     return () => {};
   }, [currentTestFromStore]);
 
-  // useEffect(() => {
-  //   const socket = openSocket("http://localhost:8000");
-
-  //   socket.emit("user", currentUser.name);
-  //   socket.on("get online users", (data) => console.log(JSON.parse(data)));
-  //   return () => {};
-  // }, []);
+  useEffect(() => {
+    const socket = openSocket("http://localhost:8000");
+    socket.emit("user", {
+      id: currentUserFromStore.id,
+      name: currentUserFromStore.name,
+    });
+    socket.on("get online users", (data) => setOnline(data));
+    return () => {};
+  }, []);
 
   const renderLoading = () => (
     <div
@@ -48,6 +50,14 @@ const Lang = () => {
     </div>
   );
 
+  const content = (
+    <div>
+      {online.map((user) => (
+        <div>{user.name}</div>
+      ))}
+    </div>
+  );
+
   return !loading ? (
     <>
       <Aside />
@@ -55,6 +65,11 @@ const Lang = () => {
         currentUserFromStore={currentUserFromStore}
         currentTestFromStore={currentTestFromStore}
       />
+      <div style={{ position: "fixed", bottom: 0, right: 0 }}>
+        <Popover content={content} trigger="hover">
+          <Button type="primary">{`${online.length} users online`}</Button>
+        </Popover>
+      </div>
     </>
   ) : (
     renderLoading()
