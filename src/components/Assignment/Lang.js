@@ -29,7 +29,7 @@ const Lang = () => {
 
   useEffect(() => {
     // const socket = openSocket("https://toihocweb.net/socket.io/");
-    const socket = openSocket("https://127.0.0.1:8000", { secure: true });
+    const socket = openSocket("http://202.182.100.160:8000", { secure: true });
     socket.emit("user", {
       id: currentUserFromStore.id,
       name: currentUserFromStore.name,
