@@ -28,7 +28,7 @@ const Lang = () => {
   }, [currentTestFromStore]);
 
   useEffect(() => {
-    const socket = openSocket("https://toihocweb.net/socket.io/");
+    const socket = openSocket("https://toihocweb.net/socket/socket.io/");
     socket.emit("user", {
       id: currentUserFromStore.id,
       name: currentUserFromStore.name,
