@@ -28,7 +28,7 @@ const Lang = () => {
   }, [currentTestFromStore]);
 
   useEffect(() => {
-    const socket = openSocket("http://localhost:8000");
+    const socket = openSocket("http://202.182.100.160:8000");
     socket.emit("user", {
       id: currentUserFromStore.id,
       name: currentUserFromStore.name,
@@ -53,7 +53,7 @@ const Lang = () => {
   const content = (
     <div>
       {online.map((user) => (
-        <div>{user.name}</div>
+        <div key={user.id}>{user.name}</div>
       ))}
     </div>
   );
