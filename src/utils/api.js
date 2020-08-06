@@ -1,6 +1,6 @@
 export const apiUrl =
   process.env.REACT_APP_ENV === "prod"
-    ? "https://toihocweb.net"
+    ? "http://toihocweb.net"
     : "http://localhost:8000";
 
 export const serverUrl =
