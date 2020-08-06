@@ -28,8 +28,8 @@ const Lang = () => {
   }, [currentTestFromStore]);
 
   useEffect(() => {
-    // const socket = openSocket("https://toihocweb.net/socket.io/");
-    const socket = openSocket("https://202.182.100.160:8000");
+    const socket = openSocket("https://toihocweb.net/socket.io/");
+    // const socket = openSocket("https://202.182.100.160:8000");
     socket.emit("user", {
       id: currentUserFromStore.id,
       name: currentUserFromStore.name,
