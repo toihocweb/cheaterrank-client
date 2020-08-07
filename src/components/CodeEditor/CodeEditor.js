@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/mode-javascript";
 import "ace-builds/src-noconflict/theme-monokai";
+import "ace-builds/src-noconflict/ext-language_tools";
 import "ace-builds/src-noconflict/snippets/javascript";
+
 import "ace-builds/src-noconflict/ace";
 
 import classes from "./style.module.scss";
@@ -13,10 +15,13 @@ import {
   ArrowLeftOutlined,
   CheckOutlined,
   SendOutlined,
+  EyeOutlined,
 } from "@ant-design/icons";
 import { withRouter } from "react-router-dom";
 import TestCase from "./TestCase";
-import { Button, Popconfirm, message } from "antd";
+import { Button, Popconfirm, message, Modal, Card, Space } from "antd";
+import SyntaxHighlighter from "react-syntax-highlighter";
+import { gruvboxDark } from "react-syntax-highlighter/dist/esm/styles/hljs";
 
 const initialCode = `function solution(input){
   // your code here
@@ -34,7 +39,7 @@ const CodeEditor = ({
   const dispatch = useDispatch();
   const loading = useSelector((state) => state.resultReducer.isLoading);
   const error = useSelector((state) => state.errorReducer.error);
-
+  const [visible, setVisible] = useState(false);
   useEffect(() => {
     setCurrentTest(currentTestFromStore);
     setCurrentUser(currentUserFromStore);
@@ -79,6 +84,14 @@ const CodeEditor = ({
       dispatch(gettingLoading(false));
       setCode(initialCode);
     }
+  };
+
+  const showModal = () => {
+    setVisible(true);
+  };
+
+  const handleOk = (e) => {
+    setVisible(false);
   };
 
   const handlePostCode = () => {
@@ -132,6 +145,13 @@ const CodeEditor = ({
                 highlightActiveLine={true}
                 value={code}
                 width="650px"
+                setOptions={{
+                  enableBasicAutocompletion: true,
+                  enableLiveAutocompletion: true,
+                  enableSnippets: true,
+                  showLineNumbers: true,
+                  tabSize: 2,
+                }}
               />
               <div className={classes.btnActions}>
                 <Button
@@ -156,7 +176,15 @@ const CodeEditor = ({
                     Submit
                   </Button>
                 </Popconfirm>
-                ,
+                <Button
+                  type="danger"
+                  style={{ marginLeft: "auto" }}
+                  size="large"
+                  onClick={showModal}
+                  icon={<EyeOutlined />}
+                >
+                  References
+                </Button>
               </div>
             </div>
             <TestCase currentTest={currentTest} />
@@ -164,6 +192,30 @@ const CodeEditor = ({
           {error && renderErr(error)}
         </>
       )}
+      <Modal
+        title="Reference Modal"
+        visible={visible}
+        onOk={handleOk}
+        onCancel={handleOk}
+        style={{ marginTop: -50 }}
+        width={700}
+      >
+        <Space direction="vertical" style={{ width: "100%" }}>
+          {currentTest &&
+            currentTest.submitted_users.map((user, idx) => (
+              <Card
+                key={user.userId}
+                size="small"
+                title={`Hacker ${idx + 1}`}
+                extra={<a href="#">Like</a>}
+              >
+                <SyntaxHighlighter language="javascript" style={gruvboxDark}>
+                  {user.code}
+                </SyntaxHighlighter>
+              </Card>
+            ))}
+        </Space>
+      </Modal>
     </div>
   );
 };

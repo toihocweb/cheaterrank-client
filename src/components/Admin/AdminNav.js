@@ -12,9 +12,7 @@ import {
 
 const { SubMenu } = Menu;
 const AdminNav = () => {
-  return (
-   
-  );
+  return <h1>Hello</h1>;
 };
 
 export default AdminNav;

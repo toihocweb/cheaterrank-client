@@ -8,18 +8,8 @@ const List = () => {
         <Item
           title="Practice Javascript"
           lang="javascript"
-          banner="https://picsum.photos/1200/800"
+          banner="assets/img/yua.jpg"
         />
-        {/* <Item
-          title="Practice CSS"
-          lang="css"
-          banner="https://picsum.photos/1201/800"
-        />
-        <Item
-          title="Practice HTML"
-          lang="html"
-          banner="https://picsum.photos/1202/800"
-        /> */}
       </div>
     </div>
   );

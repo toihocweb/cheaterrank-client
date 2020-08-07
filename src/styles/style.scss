@@ -17,3 +17,8 @@
 .ant-menu-submenu-arrow {
   display: none !important;
 }
+
+.ant-modal-body {
+  height: 500px;
+  overflow-y: auto;
+}
