@@ -22,6 +22,8 @@ import TestCase from "./TestCase";
 import { Button, Popconfirm, message, Modal, Card, Space } from "antd";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { gruvboxDark } from "react-syntax-highlighter/dist/esm/styles/hljs";
+import Axios from "axios";
+import { apiUrl } from "../../utils/api";
 
 const initialCode = `function solution(input){
   // your code here
@@ -40,6 +42,8 @@ const CodeEditor = ({
   const loading = useSelector((state) => state.resultReducer.isLoading);
   const error = useSelector((state) => state.errorReducer.error);
   const [visible, setVisible] = useState(false);
+  const [detailUser, setDetailUser] = useState("");
+  const [hint, setHint] = useState("");
   useEffect(() => {
     setCurrentTest(currentTestFromStore);
     setCurrentUser(currentUserFromStore);
@@ -92,6 +96,8 @@ const CodeEditor = ({
 
   const handleOk = (e) => {
     setVisible(false);
+    setHint("");
+    setDetailUser("");
   };
 
   const handlePostCode = () => {
@@ -110,6 +116,14 @@ const CodeEditor = ({
     } else {
       setCode(initialCode);
     }
+  };
+
+  const handleClickShowUser = async (userId) => {
+    setHint(userId);
+    const res = await Axios.get(
+      `${apiUrl}/api/v1/cheaterrank/auth/user/${userId}`
+    );
+    setDetailUser(res.data.msg);
   };
 
   return (
@@ -207,7 +221,16 @@ const CodeEditor = ({
                 key={user.userId}
                 size="small"
                 title={`Hacker ${idx + 1}`}
-                extra={<a href="#">Like</a>}
+                extra={
+                  currentUser.role === "admin" ? (
+                    <a
+                      onClick={() => handleClickShowUser(user.userId)}
+                      href="#"
+                    >
+                      {user.userId === hint ? detailUser : "show"}
+                    </a>
+                  ) : null
+                }
               >
                 <SyntaxHighlighter language="javascript" style={gruvboxDark}>
                   {user.code}
