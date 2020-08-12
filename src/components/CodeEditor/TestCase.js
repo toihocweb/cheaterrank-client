@@ -2,6 +2,9 @@ import React, { useRef } from "react";
 import classes from "./style.module.scss";
 import { useSelector } from "react-redux";
 import { CheckOutlined, CloseOutlined, SyncOutlined } from "@ant-design/icons";
+import SyntaxHighlighter from "react-syntax-highlighter";
+import { gruvboxDark } from "react-syntax-highlighter/dist/esm/styles/hljs";
+
 const TestCase = ({ currentTest }) => {
   const result = useSelector((state) => state.resultReducer.results);
   const loading = useSelector((state) => state.resultReducer.isLoading);
@@ -65,18 +68,23 @@ const TestCase = ({ currentTest }) => {
                   <p>Input</p>
                   <span>{JSON.stringify(val)}</span>
                   <p style={{ marginTop: 20 }}>Output</p>
-                  <span>
+                  {/* {JSON.stringify(
+                      JSON.parse(currentTest.outputs.split("'").join('"'))[
+                        index
+                      ]
+                    )} */}
+                  <SyntaxHighlighter language="plaintext" style={gruvboxDark}>
                     {JSON.stringify(
                       JSON.parse(currentTest.outputs.split("'").join('"'))[
                         index
                       ]
                     )}
-                  </span>
+                  </SyntaxHighlighter>
 
                   {result && (
                     <>
                       <p style={{ marginTop: 20 }}>Your Result</p>
-                      <span
+                      {/* <span
                         style={{
                           color: result.failed_cases.includes(index + 1)
                             ? "#e74c3c"
@@ -86,7 +94,15 @@ const TestCase = ({ currentTest }) => {
                         {typeof result.code_result[index] !== "undefined"
                           ? JSON.stringify(result.code_result[index])
                           : "undefined"}
-                      </span>
+                      </span> */}
+                      <SyntaxHighlighter
+                        language="plaintext"
+                        style={gruvboxDark}
+                      >
+                        {typeof result.code_result[index] !== "undefined"
+                          ? result.code_result[index]
+                          : "undefined"}
+                      </SyntaxHighlighter>
                     </>
                   )}
                 </div>
