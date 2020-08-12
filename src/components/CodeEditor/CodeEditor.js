@@ -108,6 +108,7 @@ const CodeEditor = ({
         userId: currentUser.id,
         testId: currentTest._id,
         code: refactor_code[1],
+        userName: currentUser.name,
       };
       dispatch(submittingCode(dataPost));
       setTimeout(() => {

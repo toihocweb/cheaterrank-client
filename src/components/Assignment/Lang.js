@@ -4,8 +4,8 @@ import CodeEditor from "../CodeEditor/CodeEditor";
 import { useSelector } from "react-redux";
 import HashLoader from "react-spinners/HashLoader";
 import openSocket from "socket.io-client";
-import { Button, Popover } from "antd";
-
+import { Button, Popover, message } from "antd";
+import sound from "./alo.mp3";
 const Lang = () => {
   const [loading, setLoading] = useState(false);
   const currentTestFromStore = useSelector(
@@ -29,10 +29,37 @@ const Lang = () => {
 
   useEffect(() => {
     // const socket = openSocket("https://toihocweb.net/socket.io/");
-    const socket = openSocket("http://202.182.100.160:8000", { secure: true });
+    let socket;
+    if (process.env.REACT_APP_ENV !== "prod") {
+      socket = openSocket("http://localhost:8000", { secure: true });
+    } else {
+      socket = openSocket("http://202.182.100.160:8000", {
+        secure: true,
+      });
+    }
     socket.emit("user", {
       id: currentUserFromStore.id,
       name: currentUserFromStore.name,
+    });
+    socket.on("test", (data) => {
+      if (data.action === "submit") {
+        if (data.userId !== currentUserFromStore.id) {
+          message.success(data.msg);
+          const player = new Audio(sound);
+          player.pause();
+          player.currentTime = 0;
+          var playPromise = player.play();
+          if (playPromise !== undefined) {
+            playPromise
+              .then((_) => {
+                console.log("audio played auto");
+              })
+              .catch((error) => {
+                console.log("playback prevented");
+              });
+          }
+        }
+      }
     });
     socket.on("get online users", (data) => setOnline(data));
     return () => {};
