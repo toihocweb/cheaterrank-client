@@ -43,8 +43,8 @@ const AdminLayout = () => {
       </div>
       <div style={{ marginLeft: 210, paddingTop: 20, paddingRight: 30 }}>
         <Switch>
-          <Route component={User} path="/admin/user" />
-          <Route component={Test} path="/admin/test" />
+          <Route component={User} path="/admin/user" exact />
+          <Route component={Test} path="/admin/test" exact />
         </Switch>
       </div>
     </div>

@@ -5,7 +5,6 @@ import { useSelector } from "react-redux";
 import HashLoader from "react-spinners/HashLoader";
 import openSocket from "socket.io-client";
 import { Button, Popover, message } from "antd";
-import sound from "./alo.mp3";
 const Lang = () => {
   const [loading, setLoading] = useState(false);
   const currentTestFromStore = useSelector(
@@ -41,26 +40,7 @@ const Lang = () => {
       id: currentUserFromStore.id,
       name: currentUserFromStore.name,
     });
-    socket.on("test", (data) => {
-      if (data.action === "submit") {
-        if (data.userId !== currentUserFromStore.id) {
-          message.success(data.msg);
-          const player = new Audio(sound);
-          player.pause();
-          player.currentTime = 0;
-          var playPromise = player.play();
-          if (playPromise !== undefined) {
-            playPromise
-              .then((_) => {
-                console.log("audio played auto");
-              })
-              .catch((error) => {
-                console.log("playback prevented");
-              });
-          }
-        }
-      }
-    });
+
     socket.on("get online users", (data) => setOnline(data));
     return () => {};
   }, []);

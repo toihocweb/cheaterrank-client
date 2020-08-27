@@ -40,7 +40,7 @@ const Header = ({ history }) => {
                 </SubMenu>
               </Menu>
             ) : (
-              <ul style={{ display: "flex", alignItems: "center" }}>
+              <ul style={{ display: "flex", alignItems: "center", margin: 0 }}>
                 <li>
                   <Link className={classes.BtnRegister} to="/register">
                     Register

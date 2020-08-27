@@ -25,11 +25,6 @@ import { gruvboxDark } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import Axios from "axios";
 import { apiUrl } from "../../utils/api";
 
-const initialCode = `function solution(input){
-  // your code here
-
-}`;
-
 const CodeEditor = ({
   currentTestFromStore,
   currentUserFromStore,
@@ -49,7 +44,7 @@ const CodeEditor = ({
     setCurrentUser(currentUserFromStore);
     if (currentTestFromStore !== null) {
       const submitted_users = currentTestFromStore.submitted_users.find(
-        (val) => val.userId === currentUserFromStore.id
+        (val) => val.userId._id === currentUserFromStore.id
       );
       if (submitted_users) {
         setCode(setDesc(submitted_users.code, false));
@@ -86,7 +81,7 @@ const CodeEditor = ({
       dispatch(gettingResult(userCode));
     } else {
       dispatch(gettingLoading(false));
-      setCode(initialCode);
+      setCode(setDesc(currentTestFromStore.desc, true));
     }
   };
 
@@ -108,14 +103,13 @@ const CodeEditor = ({
         userId: currentUser.id,
         testId: currentTest._id,
         code: refactor_code[1],
-        userName: currentUser.name,
       };
       dispatch(submittingCode(dataPost));
       setTimeout(() => {
         message.success("Submitted Successfully");
       }, 500);
     } else {
-      setCode(initialCode);
+      setCode(setDesc(currentTestFromStore.desc, true));
     }
   };
 
@@ -218,21 +212,7 @@ const CodeEditor = ({
         <Space direction="vertical" style={{ width: "100%" }}>
           {currentTest &&
             currentTest.submitted_users.map((user, idx) => (
-              <Card
-                key={user.userId}
-                size="small"
-                title={`Hacker ${idx + 1}`}
-                extra={
-                  currentUser.role === "admin" ? (
-                    <a
-                      onClick={() => handleClickShowUser(user.userId)}
-                      href="#"
-                    >
-                      {user.userId === hint ? detailUser : "show"}
-                    </a>
-                  ) : null
-                }
-              >
+              <Card key={user.userId} size="small" title={user.userId.name}>
                 <SyntaxHighlighter language="javascript" style={gruvboxDark}>
                   {user.code}
                 </SyntaxHighlighter>
