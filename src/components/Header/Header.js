@@ -2,7 +2,7 @@ import React from "react";
 import classes from "./style.module.scss";
 import { Link, withRouter } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { Menu } from "antd";
+import { Menu, Button } from "antd";
 import { logoutUser } from "../actions";
 const { SubMenu } = Menu;
 
@@ -20,7 +20,19 @@ const Header = ({ history }) => {
           <h2>
             <Link to="/">Logo</Link>
           </h2>
-          <nav>
+          <Button
+            onClick={() =>
+              window.open(
+                "https://www.youtube.com/playlist?list=PLCQCYoV4-dL0BpuzG9ibjqC6Y3Z6mGSvT",
+                "_blank"
+              )
+            }
+            type="dashed"
+            ghost
+          >
+            Learn Js
+          </Button>
+          <nav style={{ display: "flex", alignItems: "center" }}>
             {currentUser ? (
               <Menu mode="vertical-right">
                 <SubMenu

@@ -113,14 +113,6 @@ const CodeEditor = ({
     }
   };
 
-  const handleClickShowUser = async (userId) => {
-    setHint(userId);
-    const res = await Axios.get(
-      `${apiUrl}/api/v1/cheaterrank/auth/user/${userId}`
-    );
-    setDetailUser(res.data.msg);
-  };
-
   return (
     <div
       style={{
@@ -208,6 +200,7 @@ const CodeEditor = ({
         onCancel={handleOk}
         style={{ marginTop: -50 }}
         width={700}
+        className="reference-modal"
       >
         <Space direction="vertical" style={{ width: "100%" }}>
           {currentTest &&

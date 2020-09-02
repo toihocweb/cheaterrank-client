@@ -11,6 +11,7 @@ import Register from "./components/Register/Register";
 import AuthRoute from "./components/common/AuthRoute";
 import jwt from "jsonwebtoken";
 import AdminLayout from "./components/Admin/AdminLayout";
+import Learning from "./components/Learning/Learning";
 
 // const decodedToken = jwt.verify(token, keys.secretOrKey);
 // Check for token
@@ -48,7 +49,8 @@ const App = () => {
         <Route component={Login} path="/login" />
         <Route component={Register} path="/register" />
         <PrivateRoute component={AdminLayout} path="/admin" />
-        <AuthRoute component={Lang} path="/:lang" />
+        {/* <AuthRoute component={Learning} path="/learning" /> */}
+        <AuthRoute component={Lang} path="/javascript" />
         <Route render={(props) => <h1>Page Not Found</h1>} path="*" exact />
       </Switch>
     </Router>

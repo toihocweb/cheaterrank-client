@@ -105,6 +105,7 @@ function* submitCode(action) {
   try {
     const res = yield submit(action.data);
     if (res.code === 201) {
+      console.log(res.data);
       yield put({ type: SUBMIT_CODE, data: res.data });
     } else {
       yield put({ type: GET_ERROR, error: "some thing wrong" });

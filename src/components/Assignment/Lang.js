@@ -30,7 +30,10 @@ const Lang = () => {
     // const socket = openSocket("https://toihocweb.net/socket.io/");
     let socket;
     if (process.env.REACT_APP_ENV !== "prod") {
-      socket = openSocket("http://localhost:8000", { secure: true });
+      socket = openSocket("http://localhost:8000", {
+        secure: true,
+        rejectUnauthorized: false,
+      });
     } else {
       socket = openSocket("http://202.182.100.160:8000", {
         secure: true,
