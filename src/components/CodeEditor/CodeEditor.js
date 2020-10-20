@@ -204,10 +204,10 @@ const CodeEditor = ({
       >
         <Space direction="vertical" style={{ width: "100%" }}>
           {currentTest &&
-            currentTest.submitted_users.map((user, idx) => (
-              <Card key={user.userId} size="small" title={user.userId.name}>
+            currentTest?.submitted_users.map((user, idx) => (
+              <Card key={user?.userId} size="small" title={user?.userId?.name}>
                 <SyntaxHighlighter language="javascript" style={gruvboxDark}>
-                  {user.code}
+                  {user?.code}
                 </SyntaxHighlighter>
               </Card>
             ))}
