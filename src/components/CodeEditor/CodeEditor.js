@@ -44,7 +44,7 @@ const CodeEditor = ({
     setCurrentUser(currentUserFromStore);
     if (currentTestFromStore !== null) {
       const submitted_users = currentTestFromStore.submitted_users.find(
-        (val) => val.userId._id === currentUserFromStore.id
+        (val) => val?.userId?._id === currentUserFromStore.id
       );
       if (submitted_users) {
         setCode(setDesc(submitted_users.code, false));
@@ -204,10 +204,10 @@ const CodeEditor = ({
       >
         <Space direction="vertical" style={{ width: "100%" }}>
           {currentTest &&
-            currentTest.submitted_users.map((user, idx) => (
-              <Card key={user.userId} size="small" title={user.userId.name}>
+            currentTest?.submitted_users.map((user, idx) => (
+              <Card key={user?.userId} size="small" title={user?.userId?.name}>
                 <SyntaxHighlighter language="javascript" style={gruvboxDark}>
-                  {user.code}
+                  {user?.code}
                 </SyntaxHighlighter>
               </Card>
             ))}
