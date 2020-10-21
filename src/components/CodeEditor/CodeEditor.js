@@ -35,6 +35,7 @@ const CodeEditor = ({
   const [currentUser, setCurrentUser] = useState(null);
   const dispatch = useDispatch();
   const loading = useSelector((state) => state.resultReducer.isLoading);
+  const results = useSelector((state) => state.resultReducer.results);
   const error = useSelector((state) => state.errorReducer.error);
   const [visible, setVisible] = useState(false);
   const [detailUser, setDetailUser] = useState("");
@@ -86,7 +87,15 @@ const CodeEditor = ({
   };
 
   const showModal = () => {
-    setVisible(true);
+    // setVisible(true);
+    if (
+      currentUserFromStore.role === "admin" ||
+      (results && results?.passed === results?.cases_len)
+    ) {
+      setVisible(true);
+    } else {
+      message.success("Vui lòng pass hết test case để sử dụng chức năng này!");
+    }
   };
 
   const handleOk = (e) => {
@@ -177,6 +186,7 @@ const CodeEditor = ({
                     Submit
                   </Button>
                 </Popconfirm>
+
                 <Button
                   type="danger"
                   style={{ marginLeft: "auto" }}

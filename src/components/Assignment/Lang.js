@@ -4,7 +4,7 @@ import CodeEditor from "../CodeEditor/CodeEditor";
 import { useSelector } from "react-redux";
 import HashLoader from "react-spinners/HashLoader";
 import openSocket from "socket.io-client";
-import { Button, Popover, message } from "antd";
+import { Button, Popover } from "antd";
 const Lang = () => {
   const [loading, setLoading] = useState(false);
   const currentTestFromStore = useSelector(
