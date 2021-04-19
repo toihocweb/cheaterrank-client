@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import classes from "./style.module.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchingTests, gettingTest } from "../actions";
-import { CheckOutlined } from "@ant-design/icons";
+import { CheckOutlined, CodeOutlined } from "@ant-design/icons";
 import { Button } from "antd";
 
 const Aside = () => {
@@ -25,7 +25,8 @@ const Aside = () => {
 
   const filterTest = (level) => {
     setLevel(level);
-    setFilterTests(tests.filter((val) => val.level === level));
+    const newTests = tests.filter((val) => val.level === level);
+    setFilterTests(newTests);
   };
 
   const renderCheck = (test) => {
@@ -34,6 +35,8 @@ const Aside = () => {
     );
     if (isSub !== -1) {
       return <CheckOutlined style={{ marginLeft: 5 }} />;
+    } else {
+      return <CodeOutlined style={{ marginLeft: 5 }} />;
     }
   };
   return (

@@ -44,11 +44,6 @@ const Lang = () => {
         currentUserFromStore={currentUserFromStore}
         currentTestFromStore={currentTestFromStore}
       />
-      {/* <div style={{ position: "fixed", bottom: 0, right: 0 }}>
-    <Popover content={content} trigger="hover">
-        <Button type="primary">{`${online.length} users online`}</Button>
-    </Popover>
-    </div> */}
     </>
   ) : (
     renderLoading()
