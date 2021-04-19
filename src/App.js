@@ -51,7 +51,7 @@ const App = () => {
         <Route component={Register} path="/register" />
         <PrivateRoute component={AdminLayout} path="/admin" />
         {/* <AuthRoute component={Learning} path="/learning" /> */}
-        <Route component={Lang} path="/javascript" />
+        <AuthRoute component={Lang} path="/javascript" />
         <Route render={(props) => <h1>Page Not Found</h1>} path="*" exact />
       </Switch>
     </Router>

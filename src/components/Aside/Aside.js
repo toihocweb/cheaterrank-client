@@ -2,20 +2,20 @@ import React, { useEffect, useState } from "react";
 import classes from "./style.module.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchingTests, gettingTest } from "../actions";
-import { CodeOutlined, DownOutlined } from "@ant-design/icons";
-import { Menu, Dropdown, Button } from "antd";
+import { CheckOutlined } from "@ant-design/icons";
+import { Button } from "antd";
 
 const Aside = () => {
   const dispatch = useDispatch();
   const tests = useSelector((state) => state.testReducer.tests);
   const currentTest = useSelector((state) => state.testReducer.currentTest);
+  const user = useSelector((state) => state.authReducer.currentUser);
   const [level, setLevel] = useState(0);
   const [filterTests, setFilterTests] = useState([]);
 
   useEffect(() => {
     dispatch(fetchingTests());
     setFilterTests(tests.filter((val) => val.level === level));
-
     return () => {};
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -28,6 +28,12 @@ const Aside = () => {
     setFilterTests(tests.filter((val) => val.level === level));
   };
 
+  const renderCheck = (test) => {
+    const isSub = test.submitted_users.findIndex((val) => val._id === user.id);
+    if (isSub !== -1) {
+      return <CheckOutlined style={{ marginLeft: 5 }} />;
+    }
+  };
   return (
     <aside className={classes.Aside}>
       <div
@@ -74,7 +80,7 @@ const Aside = () => {
                 }
               >
                 Challenge {index + 1}
-                <CodeOutlined style={{ marginLeft: 5 }} />
+                {renderCheck(val)}
               </li>
             ))}
         </ul>
