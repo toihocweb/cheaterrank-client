@@ -11,12 +11,6 @@ const List = () => {
           banner="assets/img/yua.jpg"
           path="/javascript"
         />
-        {/* <Item
-          title="Learn Javascript"
-          lang="javascript"
-          banner="assets/img/yua.jpg"
-          path="/learning"
-        /> */}
       </div>
     </div>
   );

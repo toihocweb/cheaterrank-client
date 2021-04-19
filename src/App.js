@@ -15,6 +15,7 @@ import Learning from "./components/Learning/Learning";
 
 // const decodedToken = jwt.verify(token, keys.secretOrKey);
 // Check for token
+
 if (localStorage.jwtToken) {
   // Set auth token header auth
   setAuthToken(localStorage.jwtToken);
@@ -50,7 +51,7 @@ const App = () => {
         <Route component={Register} path="/register" />
         <PrivateRoute component={AdminLayout} path="/admin" />
         {/* <AuthRoute component={Learning} path="/learning" /> */}
-        <AuthRoute component={Lang} path="/javascript" />
+        <Route component={Lang} path="/javascript" />
         <Route render={(props) => <h1>Page Not Found</h1>} path="*" exact />
       </Switch>
     </Router>

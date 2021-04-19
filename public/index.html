@@ -26,7 +26,7 @@
   <title>Cheaterrank </title>
 </head>
 
-<body style="background: rgb(33, 36, 40);height: 100vh">
+<body>
   <noscript>You need to enable JavaScript to run this app.</noscript>
   <div id="root"></div>
   <!--
@@ -40,6 +40,8 @@
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
 </body>
+<!-- Start of Rocket.Chat Livechat Script -->
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ext-language_tools.min.js"></script>
 
@@ -50,5 +52,12 @@
 
 
 </script>
-
+<script type="text/javascript">
+	(function(w, d, s, u) {
+		w.RocketChat = function(c) { w.RocketChat._.push(c) }; w.RocketChat._ = []; w.RocketChat.url = u;
+		var h = d.getElementsByTagName(s)[0], j = d.createElement(s);
+		j.async = true; j.src = 'https://chat.becodeching.com/livechat/rocketchat-livechat.min.js?_=201903270000';
+		h.parentNode.insertBefore(j, h);
+	})(window, document, 'script', 'https://chat.becodeching.com/livechat');
+	</script>
 </html>

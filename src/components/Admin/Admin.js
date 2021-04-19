@@ -66,8 +66,8 @@ const Admin = () => {
         <Form.Item label="Level" name="level">
           <Select defaultValue="0" value={level} onChange={handleChangeLevel}>
             <Option value="0">Easy</Option>
-            <Option value="1">Hard</Option>
-            <Option value="2">Expert</Option>
+            <Option value="1">Medium</Option>
+            <Option value="2">Hard</Option>
           </Select>
         </Form.Item>
         <Form.Item label="Language" name="language">
