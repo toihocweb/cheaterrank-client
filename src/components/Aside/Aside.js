@@ -29,7 +29,9 @@ const Aside = () => {
   };
 
   const renderCheck = (test) => {
-    const isSub = test.submitted_users.findIndex((val) => val._id === user.id);
+    const isSub = test.submitted_users.findIndex(
+      (val) => val.userId._id === user.id
+    );
     if (isSub !== -1) {
       return <CheckOutlined style={{ marginLeft: 5 }} />;
     }
