@@ -43,6 +43,7 @@ function* getResult(action) {
   yield put({ type: GET_ERROR, error: "" });
   try {
     let data = yield getResults(action.userCode);
+
     if (typeof data === "object") {
       yield put({ type: GET_RESULT, data });
       yield delay(1000);
@@ -105,7 +106,6 @@ function* submitCode(action) {
   try {
     const res = yield submit(action.data);
     if (res.code === 201) {
-      console.log(res.data);
       yield put({ type: SUBMIT_CODE, data: res.data });
     } else {
       yield put({ type: GET_ERROR, error: "some thing wrong" });

@@ -23,7 +23,8 @@ import { Button, Popconfirm, message, Modal, Card, Space } from "antd";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { gruvboxDark } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import Axios from "axios";
-import { apiUrl } from "../../utils/api";
+import { sleep } from "../../utils/sleep";
+import store from "../../store";
 
 const CodeEditor = ({
   currentTestFromStore,
@@ -40,6 +41,8 @@ const CodeEditor = ({
   const [visible, setVisible] = useState(false);
   const [detailUser, setDetailUser] = useState("");
   const [hint, setHint] = useState("");
+  const [disable, setDisable] = useState(true);
+
   useEffect(() => {
     setCurrentTest(currentTestFromStore);
     setCurrentUser(currentUserFromStore);
@@ -94,7 +97,7 @@ const CodeEditor = ({
     ) {
       setVisible(true);
     } else {
-      message.success("Vui lòng pass hết test case để sử dụng chức năng này!");
+      message.warn("Vui lòng pass hết test case để sử dụng chức năng này!");
     }
   };
 
@@ -104,7 +107,7 @@ const CodeEditor = ({
     setDetailUser("");
   };
 
-  const handlePostCode = () => {
+  const handlePostCode = async () => {
     const regex = /solution\(input\)\{((.|\n)*)(.*?)\}/gm;
     const refactor_code = regex.exec(code);
     if (refactor_code !== null) {
@@ -113,10 +116,26 @@ const CodeEditor = ({
         testId: currentTest._id,
         code: refactor_code[1],
       };
-      dispatch(submittingCode(dataPost));
-      setTimeout(() => {
-        message.success("Submitted Successfully");
-      }, 500);
+      const userCode = {
+        ...currentTest,
+        code: refactor_code[1],
+      };
+
+      dispatch(gettingResult(userCode));
+
+      await sleep(500);
+      const storeState = store.getState();
+      const newResult = storeState.resultReducer.results;
+      if (newResult && !newResult?.failed_cases.length) {
+        dispatch(submittingCode(dataPost));
+        setTimeout(() => {
+          message.success("Submitted Successfully");
+        }, 500);
+      } else {
+        setTimeout(() => {
+          message.warn("Vui lòng pass hết test case để sử dụng chức năng này!");
+        }, 500);
+      }
     } else {
       setCode(setDesc(currentTestFromStore.desc, true));
     }

@@ -39,6 +39,7 @@ const Aside = () => {
       return <CodeOutlined style={{ marginLeft: 5 }} />;
     }
   };
+
   return (
     <aside className={classes.Aside}>
       <div

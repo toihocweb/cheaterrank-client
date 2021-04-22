@@ -25,11 +25,14 @@ const testReducer = (state = initialState, action) => {
 
       return {
         ...state,
-        tests: [
-          ...state.tests.slice(0, idx),
-          action.data,
-          ...state.tests.slice(idx + 1),
-        ],
+        tests:
+          idx !== -1
+            ? [
+                ...state.tests.slice(0, idx),
+                action.data,
+                ...state.tests.slice(idx + 1),
+              ]
+            : [...state.tests, action.data],
         currentTest: {
           ...state.currentTest,
           submitted_users: [...action.data.submitted_users],
